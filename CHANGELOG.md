@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/martynvdijke/trmnl/compare/v1.0.2...v1.1.0) (2026-08-18)
+
+
+### Features
+
+* add OpenCode usage graph ([5dc37f2](https://github.com/martynvdijke/trmnl/commit/5dc37f2f8cb908c169c4d33051a36521931a9651))
+
 ## [1.0.2](https://github.com/martynvdijke/trmnl/compare/v1.0.1...v1.0.2) (2026-08-18)
 
 
