@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/martynvdijke/trmnl/compare/v1.0.0...v1.0.1) (2026-08-18)
+
+
+### Bug Fixes
+
+* drop docker image publishing from release pipeline ([128c449](https://github.com/martynvdijke/trmnl/commit/128c44920eddd5e0bb2f62fe8a32739790154616))
+
 # 1.0.0 (2026-08-18)
 
 
