@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/martynvdijke/trmnl/compare/v1.0.1...v1.0.2) (2026-08-18)
+
+
+### Bug Fixes
+
+* improve OpenCode limits layouts ([0667837](https://github.com/martynvdijke/trmnl/commit/066783781685b894191be8b2b165eafc37c9c317))
+
 ## [1.0.1](https://github.com/martynvdijke/trmnl/compare/v1.0.0...v1.0.1) (2026-08-18)
 
 
