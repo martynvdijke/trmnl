@@ -1,23 +1,21 @@
 <div class="layout layout--col layout--stretch gap">
   {% if error %}
     <div class="item">
-      <div class="content">
+      <div class="content flex flex--col w--full">
         <span class="value value--medium">{{ error }}</span>
       </div>
     </div>
   {% else %}
     <div class="item">
-      <div class="content">
+      <div class="content flex flex--col w--full">
         <span class="value value--large">{{ totals[0].sessions }}</span>
-      </div>
-      <div class="meta">
         <span class="label">sessions today · {{ totals[0].cost_display }} · {{ totals[0].tokens_display }} · {{ timezone }}</span>
       </div>
     </div>
     <div class="hr"></div>
     <div class="item">
       {% for day in daily %}
-        <div class="meta">
+        <div class="w--full">
           <span class="label">{{ day.label }} · {{ day.sessions }} · {{ day.cost_display }}</span>
         </div>
       {% endfor %}
@@ -26,7 +24,7 @@
       <div class="hr"></div>
       <div class="item">
         {% for model in models %}
-          <div class="meta">
+          <div class="w--full">
             <span class="label">{{ model.name }} · {{ model.cost_display }} ({{ model.pct }}%)</span>
           </div>
         {% endfor %}

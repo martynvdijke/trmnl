@@ -1,53 +1,43 @@
 <div class="layout layout--row layout--stretch gap">
   {% if error %}
-    <div class="columns">
-      <div class="column">
+    <div class="item">
+      <div class="content flex flex--col w--full">
         <span class="value value--medium">{{ error }}</span>
       </div>
     </div>
   {% else %}
-    <div class="columns">
-      <div class="column">
-        <span class="value value--large">{{ totals[0].sessions }}</span>
-        <div class="meta">
+    <div class="item content flex flex--col w--full">
+      <div class="flex flex--row flex--between flex--center-y gap w--full">
+        <div class="flex flex--col">
+          <span class="value value--large">{{ totals[0].sessions }}</span>
           <span class="label">sessions today</span>
         </div>
-        <div class="meta">
+        <div class="flex flex--col">
           <span class="label">{{ totals[0].cost_display }}</span>
-        </div>
-        <div class="meta">
           <span class="label">{{ totals[0].tokens_display }} tokens · {{ timezone }}</span>
         </div>
       </div>
-      <div class="column">
-        <span class="value value--medium lg:value--large">{{ totals[2].sessions }}</span>
-        <div class="meta">
+      <div class="flex flex--row flex--between flex--center-y gap w--full">
+        <div class="flex flex--col">
+          <span class="value value--medium lg:value--large">{{ totals[2].sessions }}</span>
           <span class="label">sessions in 30 days</span>
         </div>
-        <div class="meta">
+        <div class="flex flex--col">
           <span class="label">{{ totals[2].cost_display }}</span>
-        </div>
-        <div class="meta">
           <span class="label">{{ totals[2].tokens_display }} tokens</span>
         </div>
       </div>
     </div>
-    <div class="columns">
-      <div class="column">
-        {% for hour in hourly %}
-          <div class="meta">
-            <span class="label">{{ hour.label }} · {{ hour.sessions }}</span>
-          </div>
-        {% endfor %}
-      </div>
-      <div class="column">
-        <span class="value value--small">Last 24h spend</span>
-        {% for hour in hourly %}
-          <div class="bar">
+    <div class="item content flex flex--col w--full">
+      <span class="value value--small">Last 24h spend</span>
+      {% for hour in hourly %}
+        <div class="flex flex--row flex--between flex--center-y gap w--full">
+          <span class="label">{{ hour.label }} · {{ hour.sessions }}</span>
+          <div class="bar grow">
             <div class="bar__fill" style="width: {{ hour.pct }}%"></div>
           </div>
-        {% endfor %}
-      </div>
+        </div>
+      {% endfor %}
     </div>
   {% endif %}
   <div class="title_bar">
