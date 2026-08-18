@@ -1,0 +1,36 @@
+# Go binaries
+main
+trmnl-immich
+trmnl-immich-go
+
+# Databases
+db.*
+*.db
+*.sqlite3
+
+# Go test artifacts
+*.test
+*.out
+coverage
+coverage.out
+
+# Python
+__pycache__/
+*.pyc
+
+# Build
+tmp/
+dist/
+*.log
+build-errors.log
+
+# Environment
+.env
+.env.*
+
+# Local tooling
+openspec/
+.opencode/
+
+# TRMNL build artifacts
+plugins/*/_build/

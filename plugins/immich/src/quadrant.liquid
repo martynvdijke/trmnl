@@ -1,0 +1,21 @@
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--small">{{ error }}</span>
+    </div>
+  {% elsif image %}
+    <div class="item">
+      <img class="image image-cover image-dither rounded" src="{{ trml.plugin_settings.custom_fields_values.url }}{{ image }}" />
+    </div>
+    <div class="item">
+      <span class="value value--small lg:value--medium">{{ title }}</span>
+      <div class="meta">
+        {% if date %}<span class="label">{{ date | date: "%b %d, %Y" }}</span>{% endif %}
+        {% if make or model %}<span class="label">{{ make }} {{ model }}</span>{% endif %}
+      </div>
+    </div>
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Photo of the Day</span>
+  </div>
+</div>

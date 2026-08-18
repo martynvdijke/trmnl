@@ -1,0 +1,28 @@
+<div class="layout layout--row layout--stretch gap">
+  {% if error %}
+    <div class="columns">
+      <div class="column">
+        <span class="value value--medium">{{ error }}</span>
+      </div>
+    </div>
+  {% elsif image %}
+    <div class="columns">
+      <div class="column">
+        <span class="value value--medium lg:value--large">{{ title }}</span>
+        <div class="meta">
+          {% if date %}<span class="label">{{ date | date: "%b %d, %Y" }}</span>{% endif %}
+          {% if make or model %}<span class="label">{{ make }} {{ model }}</span>{% endif %}
+          {% if lens_model %}<span class="label">{{ lens_model }}</span>{% endif %}
+          {% if city %}<span class="label">{{ city }}</span>{% endif %}
+          {% if country %}<span class="label">{{ country }}</span>{% endif %}
+        </div>
+      </div>
+      <div class="column">
+        <img class="image image-cover image-dither rounded" src="{{ trml.plugin_settings.custom_fields_values.url }}{{ image }}" />
+      </div>
+    </div>
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Photo of the Day</span>
+  </div>
+</div>

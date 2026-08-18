@@ -1,0 +1,18 @@
+# Exclude from Docker build context
+.git
+.github
+plugins/
+tests/
+openspec/
+.opencode/
+*.md
+CHANGELOG.md
+Dockerfile
+docker-compose.yaml
+Taskfile.yml
+.air.toml
+.pre-commit-config.yaml
+.releaserc.yaml
+renovate.json
+tmp/
+dist/

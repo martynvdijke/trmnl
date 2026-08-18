@@ -1,0 +1,41 @@
+<div class="layout layout--row layout--stretch gap">
+  {% if error %}
+    <div class="columns">
+      <div class="column">
+        <span class="value value--medium">{{ error }}</span>
+      </div>
+    </div>
+  {% else %}
+    <div class="columns">
+      <div class="column">
+        <span class="value value--medium lg:value--large">{{ name }}</span>
+        {% if description %}
+          <div class="meta">
+            <span class="label">{{ description }}</span>
+          </div>
+        {% endif %}
+        <div class="meta">
+          {% if prep_time %}<span class="label">Prep {{ prep_time }}</span>{% endif %}
+          {% if cook_time %}<span class="label">Cook {{ cook_time }}</span>{% endif %}
+          {% if total_time %}<span class="label">Total {{ total_time }}</span>{% endif %}
+          {% if servings %}<span class="label">{{ servings }} servings</span>{% endif %}
+        </div>
+        {% if ingredients.size > 0 %}
+          <div class="meta">
+            {% for ingredient in ingredients limit: 4 %}
+              <span class="label">{{ ingredient }}</span>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+      <div class="column">
+        {% if image %}
+          <img class="image image-cover image-dither rounded" src="{{ image }}" />
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Recipe of the Day</span>
+  </div>
+</div>

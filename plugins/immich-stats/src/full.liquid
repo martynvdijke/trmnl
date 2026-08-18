@@ -1,0 +1,49 @@
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--medium">{{ error }}</span>
+    </div>
+  {% else %}
+    <div class="grid grid--cols-2 portrait:grid--cols-1">
+      <div class="item">
+        <span class="value value--large">{{ photos }}</span>
+        <span class="label label--small">Photos</span>
+      </div>
+      <div class="item">
+        <span class="value value--large">{{ videos }}</span>
+        <span class="label label--small">Videos</span>
+      </div>
+      <div class="item">
+        <span class="value value--large">{{ usage_human }}</span>
+        <span class="label label--small">Storage</span>
+      </div>
+      <div class="item">
+        <span class="value value--large">v{{ version_full }}</span>
+        <span class="label label--small">Version</span>
+      </div>
+    </div>
+    {% if usage_by_user.size > 1 %}
+      <div class="hr"></div>
+      {% for user in usage_by_user %}
+        <div class="layout layout--row">
+          <span class="value value--small">{{ user.user_name }}</span>
+          <span class="value value--small">{{ user.usage_human }}</span>
+        </div>
+      {% endfor %}
+    {% endif %}
+    <div class="hr"></div>
+    <div class="item">
+      <div class="meta">
+        <span class="label">Node {{ server.nodejs }}</span>
+        <span class="label">FFmpeg {{ server.ffmpeg }}</span>
+        <span class="label">ExifTool {{ server.exiftool }}</span>
+        <span class="label">ImageMagick {{ server.imagemagick }}</span>
+        <span class="label">libvips {{ server.libvips }}</span>
+        {% if server.licensed %}<span class="label">Licensed</span>{% endif %}
+      </div>
+    </div>
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Immich Stats</span>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <div class="content">
+        <span class="value value--medium">{{ error }}</span>
+      </div>
+    </div>
+  {% elsif image %}
+    <div class="item">
+      <img class="image image-cover image-dither rounded" src="{{ image }}" />
+    </div>
+  {% endif %}
+  <div class="item">
+    <div class="content">
+      <span class="value value--large">{{ name }}</span>
+    </div>
+    {% if description %}
+      <div class="meta">
+        <span class="label">{{ description }}</span>
+      </div>
+    {% endif %}
+    <div class="meta">
+      {% if prep_time %}<span class="label">Prep {{ prep_time }}</span>{% endif %}
+      {% if cook_time %}<span class="label">Cook {{ cook_time }}</span>{% endif %}
+      {% if total_time %}<span class="label">Total {{ total_time }}</span>{% endif %}
+      {% if servings %}<span class="label">{{ servings }} servings</span>{% endif %}
+      {% if rating %}<span class="label">★ {{ rating }}</span>{% endif %}
+    </div>
+  </div>
+  {% if ingredients.size > 0 %}
+    <div class="hr"></div>
+    <div class="item">
+      <span class="value value--small lg:value--medium">Ingredients</span>
+      {% for ingredient in ingredients %}
+        <div class="meta">
+          <span class="label">{{ ingredient }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  {% if instructions.size > 0 %}
+    <div class="hr"></div>
+    <div class="item">
+      <span class="value value--small lg:value--medium">Instructions</span>
+      {% for instruction in instructions %}
+        <div class="meta">
+          <span class="label">{{ forloop.index }}. {{ instruction }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Recipe of the Day</span>
+  </div>
+</div>

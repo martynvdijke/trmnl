@@ -1,0 +1,15 @@
+services:
+  trmnl-immich:
+    image: martynvandijke/trmnl-immich:latest
+    container_name: trmnl-immich
+    environment:
+     - IMMICH_URL=https://immich.example.com
+     - IMMICH_API_KEY=change-me
+    ports:
+      - 8080:8080
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]
+      interval: 5s
+      timeout: 10s
+      retries: 3
+    restart: always

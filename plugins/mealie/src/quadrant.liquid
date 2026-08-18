@@ -1,0 +1,23 @@
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--small">{{ error }}</span>
+    </div>
+  {% else %}
+    {% if image %}
+      <div class="item">
+        <img class="image image-cover image-dither rounded" src="{{ image }}" />
+      </div>
+    {% endif %}
+    <div class="item">
+      <span class="value value--small lg:value--medium">{{ name }}</span>
+      <div class="meta">
+        {% if total_time %}<span class="label">{{ total_time }}</span>{% endif %}
+        {% if servings %}<span class="label">{{ servings }} servings</span>{% endif %}
+      </div>
+    </div>
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Recipe</span>
+  </div>
+</div>

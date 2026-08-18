@@ -1,0 +1,67 @@
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: post
+framework_version: latest
+serverless_language: python
+polling_url: "{{url}}/api/search/random"
+polling_headers: 'x-api-key={{api_key}}'
+polling_body: '{"size":1,"albumIds":{{album_id}},"personIds":{{person_id}}}'
+id: 444098
+oauth_enabled: 'false'
+oauth_pkce_enabled: 'no'
+oauth_authorize_url: ''
+oauth_token_url: ''
+oauth_scopes: ''
+oauth_scope_separator: ''
+oauth_refresh_url: ''
+oauth_auth_params: ''
+oauth_token_headers: ''
+oauth_token_site: ''
+oauth_token_params: ''
+oauth_token_request_auth_method: ''
+oauth_body_format: ''
+oauth_token_response_metadata: ''
+oauth_authorization_method: ''
+oauth_refresh_params: ''
+oauth_token_field_name: ''
+oauth_expiry_field_name: ''
+oauth_expiry_strategy: ''
+oauth_fixed_expiry_ms: ''
+custom_fields:
+  - keyname: url
+    name: 'Address of the Immich server'
+    field_type: url
+    description: 'The base URL of your Immich server'
+    placeholder: 'https://immich.example.com'
+    help_text: 'Please include the protocol (e.g. http or https)'
+  - keyname: api_key
+    name: 'Immich API Key'
+    field_type: text
+    description: 'API key for your Immich server'
+    placeholder: 'Your Immich API key'
+    help_text: 'Create one in Immich: Account Settings > API Keys'
+  - keyname: album_id
+    name: 'Album ID'
+    field_type: text
+    description: 'Optional: restrict photos to this album'
+    placeholder: '[]'
+    help_text: 'JSON array of album UUIDs, e.g. ["<uuid>"]. Leave [] for the whole library'
+  - keyname: person_id
+    name: 'Person ID'
+    field_type: text
+    description: 'Optional: restrict photos to this person'
+    placeholder: '[]'
+    help_text: 'JSON array of person UUIDs, e.g. ["<uuid>"]. Leave [] for the whole library'
+  - keyname: bio
+    name: About This Plugin
+    category: entertainment
+    field_type: author_bio
+    description: I am running an Immich server, this shows a random photo from my library on my trmnl each day.
+    github_url: https://github.com/martynvdijke/trmnl
+    learn_more_url: https://github.com/martynvdijke/trmnl
+    email_address: martyn@vandijke.xyz
+name: 'Immich Photo of the Day'
+description: 'Random photo from your Immich'
+refresh_interval: 1440

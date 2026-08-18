@@ -1,0 +1,56 @@
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+framework_version: latest
+serverless_language: python
+polling_url: "{{url}}/api/recipes?perPage=100"
+polling_headers: 'Authorization=Bearer {{api_key}}'
+polling_body: ''
+id: 443871
+oauth_enabled: 'false'
+oauth_pkce_enabled: 'no'
+oauth_authorize_url: ''
+oauth_token_url: ''
+oauth_scopes: ''
+oauth_scope_separator: ''
+oauth_refresh_url: ''
+oauth_auth_params: ''
+oauth_token_headers: ''
+oauth_token_site: ''
+oauth_token_params: ''
+oauth_token_request_auth_method: ''
+oauth_body_format: ''
+oauth_token_response_metadata: ''
+oauth_authorization_method: ''
+oauth_refresh_params: ''
+oauth_token_field_name: ''
+oauth_expiry_field_name: ''
+oauth_expiry_strategy: ''
+oauth_fixed_expiry_ms: ''
+custom_fields:
+- keyname: url
+  field_type: url
+  name: Address of the Mealie instance
+  description: URL
+  placeholder: https://mealie.example.com
+  help_text: Please include the protocol (e.g. http or https)
+- keyname: api_key
+  field_type: text
+  name: Mealie API Key
+  description: API token
+  placeholder: Your Mealie API key
+  help_text: 'Create one in Mealie: User Settings > API Tokens'
+- keyname: bio
+  name: About This Plugin
+  category: entertainment
+  field_type: author_bio
+  description: I am running a Mealie instance, this shows a random recipe of the day on my trmnl.
+  github_url: https://github.com/martynvdijke/trmnl
+  learn_more_url: https://github.com/martynvdijke/trmnl
+  email_address: martyn@vandijke.xyz
+name: Mealie Recipe of the Day
+description: 'Random recipe from your Mealie'
+refresh_interval: 1440
