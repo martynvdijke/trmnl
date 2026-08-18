@@ -1,3 +1,10 @@
+# 1.0.0 (2026-08-18)
+
+
+### Features
+
+* consolidate TRMNL plugins into monorepo ([534635d](https://github.com/martynvdijke/trmnl/commit/534635d2cb3c67b90807fff2e20006eaa3433928))
+
 # Changelog
 
 All notable changes to this project are documented here.
