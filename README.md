@@ -36,7 +36,8 @@ task run       # go run .
 task test      # go test ./...
 ```
 
-Docker: `docker compose up -d` (image `martynvandijke/trmnl-immich`).
+No Docker images are published — run the middleware directly (e.g. as a
+systemd service or your scheduler of choice).
 
 ## Development
 
@@ -49,7 +50,6 @@ Docker: `docker compose up -d` (image `martynvandijke/trmnl-immich`).
 
 - `ci.yaml` — Go vet/test + Python transform tests on PRs and non-main pushes
 - `trml.yaml` — lints all plugins on PRs; pushes all plugins on main
-- `release.yaml` — semantic-release, Docker image build/push, TRMNL plugin
-  push, gotify notifications, OpenTelemetry export
+- `release.yaml` — semantic-release, TRMNL plugin push, gotify notifications, OpenTelemetry export
 - `stale-branches.yml` — daily stale branch cleanup
 - Renovate keeps actions, Go, and dependencies up to date

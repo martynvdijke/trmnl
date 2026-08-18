@@ -18,8 +18,9 @@ All notable changes to this project are documented here.
 - Plugins moved to `plugins/` with per-plugin directories:
   `immich`, `immich-stats`, `mealie`, `opencode-usage`, `opencode-limits`.
 - Merged CI/CD: Go tests, Python transform tests, TRMNL plugin lint/push
-  loops, semantic-release with Docker + GHCR publishing, gotify
-  notifications, and OpenTelemetry export.
+  loops, semantic-release, gotify notifications, and OpenTelemetry export.
+- Dropped Docker image publishing from the release pipeline (middleware runs
+  directly via `task run` / `go run`).
 
 ### Changed
 
