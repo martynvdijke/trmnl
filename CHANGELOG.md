@@ -34,8 +34,18 @@ All notable changes to this project are documented here.
 
 ### Added
 
-- Monorepo consolidating the standalone `trmnl-immich`, `trmnl-mealie`,
-  `trmnl-opencode`, and `trmnl-immich-stats` repositories.
+- New media/homelab plugins that call their respective APIs directly (IDs are
+  assigned on first push via `scripts/push-new.sh`):
+  - Media/visual: `jellyfin-now-playing`, `jellystat`, `coming-soon` (Sonarr +
+    Radarr), `audiobookshelf` (currently listening), `booklore` (reading +
+    library size)
+  - Homelab health: `adguard-home`, `uptime-kuma`, `scrutiny` (disk SMART),
+    `backrest` (last backup), `nginx-proxy-manager` (cert expiry), `forgejo`
+    (PRs/issues + CI), `freshrss` (unread), `wallabag` (unread)
+  Each ships with `.trmnlp.yml`, `src/settings.yml`, `transform.py`, four
+  Liquid views, and a transform unit test.
+- `opencode-usage` now renders a weekly tokens + cost graph (two Highcharts
+  spline series) alongside the existing 30-day cost and session views.
 - Plugins moved to `plugins/` with per-plugin directories:
   `immich`, `immich-stats`, `mealie`, `opencode-usage`, `opencode-limits`.
 - Merged CI/CD: Go tests, Python transform tests, TRMNL plugin lint/push

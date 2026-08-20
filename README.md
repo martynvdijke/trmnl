@@ -11,11 +11,27 @@ Custom TRMNL plugins and the Immich photo proxy middleware, consolidated into a 
 | [mealie](plugins/mealie) | 443871 | Recipe of the Day — a random recipe from your Mealie instance |
 | [opencode-usage](plugins/opencode-usage) | 444114 | OpenCode usage and token spend from an OpenCode server |
 | [opencode-limits](plugins/opencode-limits) | 444197 | OpenCode Go usage limits |
+| [jellyfin-now-playing](plugins/jellyfin-now-playing) | 450296 | What is currently streaming on your Jellyfin, with poster art |
+| [jellystat](plugins/jellystat) | 450299 | Jellyfin watch time and top shows from Jellystat |
+| [adguard-home](plugins/adguard-home) | 450311 | AdGuard Home query and blocking statistics |
+| [uptime-kuma](plugins/uptime-kuma) | 450312 | Uptime Kuma monitor status from a public status page |
+| [coming-soon](plugins/coming-soon) | 450302 | Upcoming Sonarr and Radarr releases with poster art |
+| [scrutiny](plugins/scrutiny) | 450313 | Disk health and SMART status from Scrutiny |
+| [backrest](plugins/backrest) | 450314 | Last restic backup time and status from Backrest |
+| [audiobookshelf](plugins/audiobookshelf) | 450305 | Currently listening progress from Audiobookshelf |
+| [forgejo](plugins/forgejo) | 450315 | Open PRs, issues, and CI status from Forgejo |
+| [nginx-proxy-manager](plugins/nginx-proxy-manager) | 450316 | TLS certificate expiry from Nginx Proxy Manager |
+| [freshrss](plugins/freshrss) | 450308 | Unread article count from FreshRSS |
+| [wallabag](plugins/wallabag) | 450309 | Unread article count from Wallabag |
+| [booklore](plugins/booklore) | 450310 | Reading progress and library size from Booklore |
 
 Each plugin lives in `plugins/<name>/` with its own `.trmnlp.yml` and `src/`
 (`settings.yml`, `transform.py`, and one `.liquid` view per display size).
 The TRMNL plugin ID is pinned in `src/settings.yml`, so pushes update the
-existing plugin instead of creating new ones.
+existing plugin instead of creating new ones. New plugins start without an ID;
+run `bash scripts/push-new.sh` (with `TRMNL_API_KEY` exported) to push them
+for the first time, capture the assigned IDs, and write them back into both
+`src/settings.yml` and this table.
 
 ## Immich photo proxy middleware
 
@@ -44,6 +60,31 @@ systemd service or your scheduler of choice).
 - Lint the plugins: `trmnlp lint --dir plugins/<name>` for each plugin
   (or `for d in plugins/*/; do trmnlp lint --dir "$d"; done`)
 - Push a plugin to TRMNL: `TRMNL_API_KEY=... trmnlp push --force --dir plugins/<name>`
+- Bootstrap new plugins (first push without IDs, then capture + write back):
+  `export TRMNL_API_KEY=... && bash scripts/push-new.sh`
+- Preview a plugin locally: `trml --serve --dir plugins/<name>`
+  (or, with no local install, via the official container). On this homelab box
+  the serve is exposed at **https://trmnlp.vandijke.xyz/** through Nginx Proxy
+  Manager → a local reverse proxy (`scripts/trmnl-proxy.py`) → the trmnl
+  container. The proxy is required because trmnl's Sinatra/Rack
+  `HostAuthorization` rejects NPM's public-domain `Host`/`X-Forwarded-For`.
+  Serve with:
+  ```bash
+  docker run -d --name trmnl-preview -p 4568:4567 \
+    --volume "$(pwd)/plugins/<name>:/plugin" \
+    trmnl/trmnlp serve --bind 0.0.0.0
+  python3 scripts/trmnl-proxy.py   # listens on :4567, forwards to 127.0.0.1:4568
+  ```
+  It sits behind **Authelia SSO**, so authenticated sessions pass through and
+  unauthenticated requests get `403 Forbidden` (expected). Log in to the homelab
+  SSO in your browser to preview at https://trmnlp.vandijke.xyz/.
+- Push via Docker (instead of installing the binary):
+  ```bash
+  docker run --rm --volume "$(pwd)/plugins/<name>:/plugin" \
+    -e TRMNL_API_KEY=... trmnl/trmnlp push --force --dir /plugin
+  ```
+  `scripts/push-new.sh` auto-detects Docker and uses the container when the
+  `trmnlp` binary is not on your PATH.
 - Python transforms: `python3 tests/test_transform.py && python3 tests/test_limits_transform.py`
 
 ## CI/CD
