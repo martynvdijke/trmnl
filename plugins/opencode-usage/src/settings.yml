@@ -6,7 +6,7 @@ static_data: ''
 polling_verb: get
 framework_version: latest
 serverless_language: python
-polling_url: "https://opencode.vandijke.xyz/api/session?limit=10000"
+polling_url: "{{url}}/api/session?limit=10000"
 polling_headers: 'Authorization=Bearer {{api_key}}'
 polling_body: ''
 id: 444114
@@ -31,6 +31,12 @@ oauth_expiry_field_name: ''
 oauth_expiry_strategy: ''
 oauth_fixed_expiry_ms: ''
 custom_fields:
+- keyname: url
+  field_type: url
+  name: Address of the OpenCode server
+  description: URL
+  placeholder: https://opencode.vandijke.xyz
+  help_text: Please include the protocol (e.g. http or https)
 - keyname: api_key
   field_type: text
   name: OpenCode server password
