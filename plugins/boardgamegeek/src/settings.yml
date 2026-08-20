@@ -6,10 +6,9 @@ static_data: ''
 polling_verb: get
 framework_version: latest
 serverless_language: python
-polling_url: "https://opencode.vandijke.xyz/api/session?limit=10000"
-polling_headers: 'Authorization=Bearer {{api_key}}'
+polling_url: "https://boardgamegeek.com/xmlapi2/plays?username={{username}}&count=10"
+polling_headers: ''
 polling_body: ''
-id: 444114
 oauth_enabled: 'false'
 oauth_pkce_enabled: 'no'
 oauth_authorize_url: ''
@@ -31,26 +30,20 @@ oauth_expiry_field_name: ''
 oauth_expiry_strategy: ''
 oauth_fixed_expiry_ms: ''
 custom_fields:
-- keyname: api_key
+- keyname: username
+  name: BoardGameGeek username
   field_type: text
-  name: OpenCode server password
-  description: API token
-  placeholder: Your OpenCode server password
-  help_text: 'Only needed if you set OPENCODE_SERVER_PASSWORD on the server'
-- keyname: timezone
-  field_type: text
-  name: Timezone
-  description: IANA timezone name
-  placeholder: Europe/Amsterdam
-  help_text: 'Used to bucket sessions by local hour and day'
+  description: Your BoardGameGeek username
+  placeholder: your_bgg_username
+  help_text: Used to load your plays and owned collection from BoardGameGeek.
 - keyname: bio
   name: About This Plugin
   category: entertainment
   field_type: author_bio
-  description: I am using an OpenCode server, this shows my usage and token spend on my trmnl.
+  description: I track board games on BoardGameGeek, this shows my latest plays and a game from my collection.
   github_url: https://github.com/martynvdijke/trmnl
   learn_more_url: https://github.com/martynvdijke/trmnl
   email_address: martyn@vandijke.xyz
-name: OpenCode Usage
-description: 'OpenCode usage and token spend'
-refresh_interval: 60
+name: BoardGameGeek
+description: 'Latest plays & a game you own'
+refresh_interval: 3600

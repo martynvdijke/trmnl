@@ -1,0 +1,27 @@
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--small">{{ error }}</span>
+    </div>
+  {% else %}
+    {% if featured %}
+      <div class="item">
+        <span class="value value--medium">{{ featured.name }}</span>
+        <div class="meta">
+          {% if featured.year %}<span class="label">{{ featured.year }}</span>{% endif %}
+          <span class="label">Owned</span>
+        </div>
+      </div>
+    {% endif %}
+    {% if plays.size > 0 %}
+      <div class="item">
+        <span class="label">Last played</span>
+        <span class="value value--small">{{ plays[0].name }}</span>
+        <span class="label">{{ plays[0].date }}</span>
+      </div>
+    {% endif %}
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">BoardGameGeek</span>
+  </div>
+</div>

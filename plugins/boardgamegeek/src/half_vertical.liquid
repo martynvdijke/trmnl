@@ -1,0 +1,34 @@
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--small">{{ error }}</span>
+    </div>
+  {% else %}
+    {% if featured and featured.image %}
+      <div class="item">
+        <img class="image image-cover image-dither rounded" src="{{ featured.image }}" />
+      </div>
+    {% endif %}
+    {% if featured %}
+      <div class="item">
+        <span class="value value--medium lg:value--large">{{ featured.name }}</span>
+        <div class="meta">
+          {% if featured.year %}<span class="label">{{ featured.year }}</span>{% endif %}
+          {% if featured.rating %}<span class="label">★ {{ featured.rating }}</span>{% endif %}
+          <span class="label">Owned</span>
+        </div>
+      </div>
+    {% endif %}
+    <div class="hr"></div>
+    <span class="label">Latest Plays</span>
+    {% for p in plays limit:4 %}
+      <div class="item">
+        <span class="value value--small">{{ p.name }}</span>
+        <span class="label">{{ p.date }}</span>
+      </div>
+    {% endfor %}
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">@{{ username }}</span>
+  </div>
+</div>

@@ -254,19 +254,14 @@ def _summary(sessions, now_local, tz):
 
 
 def run(input_data):
-    url = ""
     api_key = ""
     timezone = "UTC"
     try:
         settings = input_data["trmnl"]["plugin_settings"]["custom_fields_values"]
-        url = _text(settings.get("url"))
         api_key = _text(settings.get("api_key"))
         timezone = _text(settings.get("timezone")) or "UTC"
     except (KeyError, TypeError, AttributeError):
         pass
-
-    if not url:
-        return {"error": "Set the url custom field to your OpenCode server address."}
 
     data = input_data.get("data") if isinstance(input_data, dict) else None
     if not isinstance(data, list):

@@ -1,0 +1,30 @@
+<div class="layout layout--row layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--small">{{ error }}</span>
+    </div>
+  {% else %}
+    <div class="columns">
+      <div class="column" style="width: 96px">
+        {% if featured and featured.image %}<img class="image image-cover image-dither rounded" src="{{ featured.image }}" />{% endif %}
+      </div>
+      <div class="column w--full">
+        {% if featured %}
+          <span class="value value--medium lg:value--large">{{ featured.name }}</span>
+          <div class="meta">
+            {% if featured.year %}<span class="label">{{ featured.year }}</span>{% endif %}
+            {% if featured.rating %}<span class="label">★ {{ featured.rating }}</span>{% endif %}
+            <span class="label">Owned</span>
+          </div>
+        {% endif %}
+        {% if plays.size > 0 %}
+          <span class="label">Last played: {{ plays[0].name }}</span>
+          <span class="label">{{ plays[0].date }}</span>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">BoardGameGeek · @{{ username }}</span>
+  </div>
+</div>
