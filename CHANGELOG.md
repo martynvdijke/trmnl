@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/martynvdijke/trmnl/compare/v1.1.0...v1.2.0) (2026-08-20)
+
+
+### Features
+
+* add 13 TRMNL plugins with push automation and serve proxy ([86b2e73](https://github.com/martynvdijke/trmnl/commit/86b2e739d339ca4a0c7871abe2a3121f0ab94a26))
+
 # [1.1.0](https://github.com/martynvdijke/trmnl/compare/v1.0.2...v1.1.0) (2026-08-18)
 
 
