@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/martynvdijke/trmnl/compare/v1.2.0...v1.2.1) (2026-08-20)
+
+
+### Bug Fixes
+
+* handle concurrent preview requests ([5128ede](https://github.com/martynvdijke/trmnl/commit/5128ede01d38b1d543ce3fe0069d4a6781933ffb))
+
 # [1.2.0](https://github.com/martynvdijke/trmnl/compare/v1.1.0...v1.2.0) (2026-08-20)
 
 
