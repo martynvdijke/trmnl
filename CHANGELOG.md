@@ -1,3 +1,15 @@
+# [1.3.0](https://github.com/martynvdijke/trmnl/compare/v1.2.1...v1.3.0) (2026-08-20)
+
+
+### Bug Fixes
+
+* unblock CI (opencode Usage + TRMNL lint) and add e-ink logo ([40398e9](https://github.com/martynvdijke/trmnl/commit/40398e99c6b382dacecb6a67b425a992d084683f))
+
+
+### Features
+
+* add BoardGameGeek plugin and fix OpenCode Usage server default ([16f6cd0](https://github.com/martynvdijke/trmnl/commit/16f6cd0a85b51489fa3d15b5c1681c1c3fe45d3f))
+
 ## [1.2.1](https://github.com/martynvdijke/trmnl/compare/v1.2.0...v1.2.1) (2026-08-20)
 
 
