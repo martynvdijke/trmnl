@@ -1,0 +1,57 @@
+id: 450296
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+framework_version: latest
+serverless_language: python
+polling_url: "{{url}}/Sessions?api_key={{api_key}}"
+polling_headers: ''
+polling_body: ''
+id: 450296
+oauth_enabled: 'false'
+oauth_pkce_enabled: 'no'
+oauth_authorize_url: ''
+oauth_token_url: ''
+oauth_scopes: ''
+oauth_scope_separator: ''
+oauth_refresh_url: ''
+oauth_auth_params: ''
+oauth_token_headers: ''
+oauth_token_site: ''
+oauth_token_params: ''
+oauth_token_request_auth_method: ''
+oauth_body_format: ''
+oauth_token_response_metadata: ''
+oauth_authorization_method: ''
+oauth_refresh_params: ''
+oauth_token_field_name: ''
+oauth_expiry_field_name: ''
+oauth_expiry_strategy: ''
+oauth_fixed_expiry_ms: ''
+custom_fields:
+- keyname: url
+  name: Address of the Jellyfin server
+  field_type: url
+  description: The base URL of your Jellyfin server
+  placeholder: https://jellyfin.example.com
+  help_text: Please include the protocol (e.g. http or https)
+- keyname: api_key
+  name: Jellyfin API Key
+  field_type: text
+  description: API key for your Jellyfin server
+  placeholder: Your Jellyfin API key
+  help_text: 'Create one in Jellyfin: Dashboard > API Keys. An admin key is recommended so all sessions are visible.'
+- keyname: bio
+  name: About This Plugin
+  category: entertainment
+  field_type: author_bio
+  description: I run a Jellyfin server, this shows what is currently streaming on my TV with poster art.
+  github_url: https://github.com/martynvdijke/trmnl
+  learn_more_url: https://github.com/martynvdijke/trmnl
+  email_address: martyn@vandijke.xyz
+name: Jellyfin Now Playing
+description: Now playing on Jellyfin
+refresh_interval: 60

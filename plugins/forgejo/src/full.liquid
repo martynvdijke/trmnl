@@ -1,0 +1,43 @@
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--medium">{{ error }}</span>
+    </div>
+  {% else %}
+    <div class="item">
+      <div class="flex flex--row flex--between w--full">
+        <div class="flex flex--col">
+          <span class="value value--large">{{ open_prs }}</span>
+          <span class="label">open PRs</span>
+        </div>
+        <div class="flex flex--col">
+          <span class="value value--large">{{ open_issues }}</span>
+          <span class="label">issues</span>
+        </div>
+        <div class="flex flex--col">
+          <span class="value value--large">{{ ci_running }}</span>
+          <span class="label">CI running</span>
+        </div>
+      </div>
+    </div>
+    {% if last_ci %}
+      <div class="item">
+        <span class="label label--small">Last CI: {{ last_ci }}</span>
+      </div>
+    {% endif %}
+    <div class="hr"></div>
+    <div class="item">
+      <span class="label label--small">Pull Requests</span>
+      {% for p in prs %}
+        <div class="flex flex--row flex--between w--full">
+          <span class="value value--small">{{ p.title }}</span>
+          <span class="label">{{ p.repo }}</span>
+        </div>
+        {% unless forloop.last %}<div class="hr"></div>{% endunless %}
+      {% endfor %}
+    </div>
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Forgejo</span>
+  </div>
+</div>

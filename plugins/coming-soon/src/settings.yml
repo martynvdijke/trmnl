@@ -1,0 +1,57 @@
+id: 450302
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+framework_version: latest
+serverless_language: python
+polling_url: "{{url}}/api/v3/calendar?apikey={{api_key}}"
+polling_headers: ''
+polling_body: ''
+id: 450302
+oauth_enabled: 'false'
+oauth_pkce_enabled: 'no'
+oauth_authorize_url: ''
+oauth_token_url: ''
+oauth_scopes: ''
+oauth_scope_separator: ''
+oauth_refresh_url: ''
+oauth_auth_params: ''
+oauth_token_headers: ''
+oauth_token_site: ''
+oauth_token_params: ''
+oauth_token_request_auth_method: ''
+oauth_body_format: ''
+oauth_token_response_metadata: ''
+oauth_authorization_method: ''
+oauth_refresh_params: ''
+oauth_token_field_name: ''
+oauth_expiry_field_name: ''
+oauth_expiry_strategy: ''
+oauth_fixed_expiry_ms: ''
+custom_fields:
+- keyname: url
+  name: Address of the Sonarr/Radarr server
+  field_type: url
+  description: The base URL of your Sonarr or Radarr server
+  placeholder: https://sonarr.example.com
+  help_text: Please include the protocol (e.g. http or https). Works with both Sonarr and Radarr.
+- keyname: api_key
+  name: API Key
+  field_type: text
+  description: API key for your Sonarr or Radarr server
+  placeholder: Your API key
+  help_text: 'Create one in Sonarr/Radarr: Settings > General > API Key'
+- keyname: bio
+  name: About This Plugin
+  category: entertainment
+  field_type: author_bio
+  description: I run Sonarr and Radarr, this shows what is releasing in the next two weeks with poster art.
+  github_url: https://github.com/martynvdijke/trmnl
+  learn_more_url: https://github.com/martynvdijke/trmnl
+  email_address: martyn@vandijke.xyz
+name: Coming Soon
+description: Upcoming Sonarr & Radarr
+refresh_interval: 1440

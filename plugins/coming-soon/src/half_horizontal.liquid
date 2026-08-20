@@ -1,0 +1,29 @@
+<div class="layout layout--row layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--medium">{{ error }}</span>
+    </div>
+  {% elsif count == 0 %}
+    <div class="item">
+      <span class="value value--medium">Nothing soon</span>
+    </div>
+  {% else %}
+    {% assign it = items[0] %}
+    <div class="columns">
+      <div class="column">
+        {% if it.poster %}<img class="image image-cover image-dither rounded" src="{{ it.poster }}" />{% endif %}
+      </div>
+      <div class="column w--full">
+        <span class="value value--medium lg:value--large">{{ it.title }}</span>
+        {% if it.subtitle %}<span class="label">{{ it.subtitle }}</span>{% endif %}
+        <div class="meta">
+          <span class="label">{{ it.kind }}</span>
+          <span class="label">{{ it.air }}</span>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Coming Soon · {{ count }}</span>
+  </div>
+</div>

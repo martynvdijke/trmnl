@@ -1,0 +1,44 @@
+{% if error %}
+<div class="layout layout--col gap--small">
+  <div class="item">
+    <div class="content">
+      <div class="meta">Nginx Proxy Manager</div>
+      <div class="value value--small">{{ error }}</div>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="layout layout--col gap--small">
+  <div class="title_bar">
+    <div class="title">Nginx Proxy Manager</div>
+    <div class="meta">{{ count }} certs</div>
+  </div>
+  {% if expiring_soon_count > 0 %}
+  <div class="item">
+    <div class="content">
+      <div class="label label--small">Expiring soon</div>
+      <div class="value value--small">{{ expiring_soon_count }} certificate(s) expire within 30 days</div>
+    </div>
+  </div>
+  {% endif %}
+  {% if count == 0 %}
+  <div class="item">
+    <div class="content">
+      <div class="value value--small">No certificates found</div>
+    </div>
+  </div>
+  {% else %}
+  <div class="item">
+    <div class="content">
+      {% for c in certs %}
+      <div class="flex flex--row flex--between flex--center-y">
+        <div class="value value--small">{{ c.domain }}</div>
+        <div class="meta">{{ c.days_left }}d</div>
+      </div>
+      {% unless forloop.last %}<div class="hr"></div>{% endunless %}
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endif %}

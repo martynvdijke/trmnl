@@ -1,0 +1,31 @@
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--small">{{ error }}</span>
+    </div>
+  {% elsif count == 0 %}
+    <div class="item">
+      <span class="value value--small">Idle</span>
+    </div>
+  {% else %}
+    {% assign p = playing[0] %}
+    <div class="item">
+      <span class="value value--medium">{{ p.title }}</span>
+      {% if p.subtitle %}<span class="label">{{ p.subtitle }}</span>{% endif %}
+      <div class="meta">
+        {% if p.user %}<span class="label">{{ p.user }}</span>{% endif %}
+      </div>
+      {% if p.runtime_min > 0 %}
+        <div class="meta">
+          <span class="label">{{ p.position_min }} / {{ p.runtime_min }} min</span>
+        </div>
+        <div class="bar grow">
+          <div class="bar__fill" style="width: {{ p.progress }}%"></div>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Now Playing</span>
+  </div>
+</div>

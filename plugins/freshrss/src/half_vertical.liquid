@@ -1,0 +1,21 @@
+{% if error %}
+<div class="layout layout--col gap--small">
+  <div class="item">
+    <div class="content">
+      <div class="value value--small">{{ error }}</div>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="layout layout--col gap--small">
+  <div class="title_bar">
+    <div class="title">FreshRSS</div>
+  </div>
+  <div class="item">
+    <div class="content">
+      <div class="value value--large">{{ unread }}</div>
+      <div class="label label--small">unread</div>
+    </div>
+  </div>
+</div>
+{% endif %}

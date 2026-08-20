@@ -1,0 +1,23 @@
+<div class="layout layout--row layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--medium">{{ error }}</span>
+    </div>
+  {% else %}
+    <div class="item">
+      <span class="value value--large">{{ open_prs }}</span>
+      <span class="label">PRs</span>
+    </div>
+    <div class="item">
+      <span class="value value--medium">{{ open_issues }}</span>
+      <span class="label">issues</span>
+    </div>
+    <div class="item">
+      <span class="value value--medium">{{ ci_running }}</span>
+      <span class="label">CI</span>
+    </div>
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Forgejo</span>
+  </div>
+</div>

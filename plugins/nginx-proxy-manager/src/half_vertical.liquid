@@ -1,0 +1,30 @@
+{% if error %}
+<div class="layout layout--col gap--small">
+  <div class="item">
+    <div class="content">
+      <div class="value value--small">{{ error }}</div>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="layout layout--col gap--small">
+  <div class="title_bar">
+    <div class="title">NPM</div>
+    <div class="meta">{{ count }}</div>
+  </div>
+  <div class="item">
+    <div class="content">
+      <div class="value value--large">{{ count }}</div>
+      <div class="label label--small">certs</div>
+    </div>
+  </div>
+  {% if expiring_soon_count > 0 %}
+  <div class="item">
+    <div class="content">
+      <div class="value value--small">{{ expiring_soon_count }}</div>
+      <div class="label label--small">expiring soon</div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endif %}

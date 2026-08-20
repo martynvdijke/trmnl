@@ -1,0 +1,63 @@
+id: 450299
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: post
+framework_version: latest
+serverless_language: python
+polling_url: "{{url}}/api/auth/login"
+polling_headers: Content-Type=application/json
+polling_body: '{"username":"{{username}}","password":"{{password}}"}'
+id: 450299
+oauth_enabled: 'false'
+oauth_pkce_enabled: 'no'
+oauth_authorize_url: ''
+oauth_token_url: ''
+oauth_scopes: ''
+oauth_scope_separator: ''
+oauth_refresh_url: ''
+oauth_auth_params: ''
+oauth_token_headers: ''
+oauth_token_site: ''
+oauth_token_params: ''
+oauth_token_request_auth_method: ''
+oauth_body_format: ''
+oauth_token_response_metadata: ''
+oauth_authorization_method: ''
+oauth_refresh_params: ''
+oauth_token_field_name: ''
+oauth_expiry_field_name: ''
+oauth_expiry_strategy: ''
+oauth_fixed_expiry_ms: ''
+custom_fields:
+- keyname: url
+  name: Address of the Jellystat server
+  field_type: url
+  description: The base URL of your Jellystat server
+  placeholder: https://jellystat.example.com
+  help_text: Please include the protocol (e.g. http or https)
+- keyname: username
+  name: Jellystat Username
+  field_type: text
+  description: Username for your Jellystat account
+  placeholder: Your Jellystat username
+  help_text: The account used to sign in to Jellystat
+- keyname: password
+  name: Jellystat Password
+  field_type: password
+  description: Password for your Jellystat account
+  placeholder: Your Jellystat password
+  help_text: Stored locally and sent only to your Jellystat server
+- keyname: bio
+  name: About This Plugin
+  category: entertainment
+  field_type: author_bio
+  description: I run a Jellyfin server tracked by Jellystat, this shows my watch time and top shows.
+  github_url: https://github.com/martynvdijke/trmnl
+  learn_more_url: https://github.com/martynvdijke/trmnl
+  email_address: martyn@vandijke.xyz
+name: Jellystat Watch Stats
+description: Jellystat watch time & top shows
+refresh_interval: 1440

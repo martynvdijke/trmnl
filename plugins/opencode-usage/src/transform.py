@@ -198,6 +198,34 @@ def _build_series(sessions, now_local, bucket_size, count, label_fmt):
     return series
 
 
+def _build_weekly(sessions, now_local, count=12):
+    """Build oldest->newest series of weekly buckets (each 7 days).
+
+    Each bucket carries both token and cost totals so the Liquid template can
+    draw a two-line graph (tokens + cost) for "tokens burned per week".
+    """
+    series = []
+    for i in range(count - 1, -1, -1):
+        start = _bucket_start(now_local, datetime.timedelta(weeks=i))
+        end = start + datetime.timedelta(weeks=1)
+        window = [
+            s
+            for s in sessions
+            if start.timestamp() * 1000 <= _created_ms(s) < end.timestamp() * 1000
+        ]
+        agg = _aggregate(window)
+        series.append(
+            {
+                "label": start.strftime("%b %d"),
+                "tokens": agg["tokens"],
+                "tokens_display": _fmt_tokens(agg["tokens"]),
+                "cost": round(agg["cost"], 2),
+                "cost_display": _fmt_cost(agg["cost"]),
+            }
+        )
+    return series
+
+
 def _summary(sessions, now_local, tz):
     """Aggregate windows: today / 7d / 30d / all-time."""
     day_start = _day_start(now_local)
@@ -256,6 +284,9 @@ def run(input_data):
         return {"error": "No sessions found on this OpenCode server."}
 
     streams = total_agg["streams"]
+    weekly_series = _build_weekly(data, now_local, 12)
+    weekly_total_tokens = sum(w["tokens"] for w in weekly_series)
+    weekly_total_cost = round(sum(w["cost"] for w in weekly_series), 2)
     return {
         "generated_at": now_local.strftime("%a %d %b %H:%M"),
         "timezone": resolved_timezone,
@@ -270,6 +301,7 @@ def run(input_data):
         "monthly": _build_series(
             data, now_local, datetime.timedelta(days=1), 30, "%d %b"
         ),
+        "weekly": weekly_series,
         "streams": {
             "input": streams["input"],
             "output": streams["output"],
@@ -283,6 +315,10 @@ def run(input_data):
             "cache_write_display": _fmt_tokens(streams["cache_write"]),
         },
         "models": _models(data),
+        "weekly_total_tokens": weekly_total_tokens,
+        "weekly_total_cost": weekly_total_cost,
+        "weekly_total_tokens_display": _fmt_tokens(weekly_total_tokens),
+        "weekly_total_cost_display": _fmt_cost(weekly_total_cost),
         "api_key_set": bool(api_key),
     }
 

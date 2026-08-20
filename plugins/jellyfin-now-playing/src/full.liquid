@@ -1,0 +1,44 @@
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--medium">{{ error }}</span>
+    </div>
+  {% elsif count == 0 %}
+    <div class="item">
+      <span class="value value--large">Nothing playing</span>
+      <span class="label">Your Jellyfin is quiet right now</span>
+    </div>
+  {% else %}
+    {% for p in playing %}
+      <div class="item">
+        <div class="columns">
+          <div class="column">
+            {% if p.poster %}<img class="image image-cover image-dither rounded" src="{{ p.poster }}" />{% endif %}
+          </div>
+          <div class="column w--full">
+            <span class="value value--medium lg:value--large">{{ p.title }}</span>
+            {% if p.subtitle %}<span class="label">{{ p.subtitle }}</span>{% endif %}
+            <div class="meta">
+              {% if p.user %}<span class="label">{{ p.user }}</span>{% endif %}
+              {% if p.device %}<span class="label">{{ p.device }}</span>{% endif %}
+              {% if p.paused %}<span class="label">Paused</span>{% endif %}
+              {% if p.transcoding %}<span class="label">Transcoding</span>{% endif %}
+            </div>
+            {% if p.runtime_min > 0 %}
+              <div class="meta">
+                <span class="label">{{ p.position_min }} / {{ p.runtime_min }} min</span>
+              </div>
+              <div class="bar grow">
+                <div class="bar__fill" style="width: {{ p.progress }}%"></div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% unless forloop.last %}<div class="hr"></div>{% endunless %}
+    {% endfor %}
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Now Playing · {{ count }} active</span>
+  </div>
+</div>

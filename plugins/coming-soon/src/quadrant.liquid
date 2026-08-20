@@ -1,0 +1,20 @@
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--small">{{ error }}</span>
+    </div>
+  {% elsif count == 0 %}
+    <div class="item">
+      <span class="value value--small">Nothing soon</span>
+    </div>
+  {% else %}
+    {% assign it = items[0] %}
+    <div class="item">
+      <span class="value value--small">{{ it.title }}</span>
+      <span class="label">{{ it.kind }}</span>
+    </div>
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Coming Soon · {{ count }}</span>
+  </div>
+</div>

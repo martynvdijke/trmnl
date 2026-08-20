@@ -58,6 +58,7 @@ class TransformTest(unittest.TestCase):
         self.assertEqual(len(out["hourly"]), 24)
         self.assertEqual(len(out["daily"]), 7)
         self.assertEqual(len(out["monthly"]), 30)
+        self.assertEqual(len(out["weekly"]), 12)
         self.assertEqual(len(out["totals"]), 4)
         for item in out["hourly"] + out["daily"] + out["monthly"]:
             self.assertIn("pct", item)
@@ -95,6 +96,22 @@ class TransformTest(unittest.TestCase):
     def test_unknown_timezone_falls_back(self):
         out = transform.run(_input(FIXTURE, timezone="Mars/Olympus"))
         self.assertEqual(out["timezone"], "UTC")
+
+    def test_weekly_series_and_totals(self):
+        out = transform.run(_input(FIXTURE))
+        self.assertNotIn("error", out)
+        self.assertEqual(len(out["weekly"]), 12)
+        for w in out["weekly"]:
+            self.assertIn("tokens", w)
+            self.assertIn("cost", w)
+            self.assertIn("label", w)
+        # totals reconcile with the sum of the weekly buckets
+        self.assertEqual(
+            out["weekly_total_tokens"], sum(w["tokens"] for w in out["weekly"])
+        )
+        self.assertAlmostEqual(
+            out["weekly_total_cost"], sum(w["cost"] for w in out["weekly"]), places=2
+        )
 
 
 if __name__ == "__main__":

@@ -1,0 +1,38 @@
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--medium">{{ error }}</span>
+    </div>
+  {% elsif has_session == false %}
+    <div class="item">
+      <span class="value value--large">Nothing playing</span>
+      <span class="label">Your Audiobookshelf is quiet right now</span>
+    </div>
+  {% else %}
+    <div class="item">
+      <div class="columns">
+        <div class="column">
+          {% if cover %}<img class="image image-cover image-dither rounded" src="{{ cover }}" />{% endif %}
+        </div>
+        <div class="column w--full">
+          <span class="value value--medium lg:value--large">{{ title }}</span>
+          {% if author %}<span class="label">{{ author }}</span>{% endif %}
+          <div class="meta">
+            {% if is_active %}<span class="label">Playing</span>{% else %}<span class="label">Paused</span>{% endif %}
+          </div>
+          {% if duration > 0 %}
+            <div class="meta">
+              <span class="label">{{ current_time }} / {{ duration }} min</span>
+            </div>
+            <div class="bar grow">
+              <div class="bar__fill" style="width: {{ progress }}%"></div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Currently Listening</span>
+  </div>
+</div>

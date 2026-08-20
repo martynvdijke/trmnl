@@ -1,0 +1,40 @@
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--medium">{{ error }}</span>
+    </div>
+  {% else %}
+    <div class="item">
+      <div class="flex flex--row flex--between w--full">
+        <div class="flex flex--col">
+          <span class="value value--large">{{ total }}</span>
+          <span class="label">monitors</span>
+        </div>
+        <div class="flex flex--col">
+          <span class="value value--large">{{ up }}</span>
+          <span class="label">up</span>
+        </div>
+        <div class="flex flex--col">
+          <span class="value value--large">{{ down }}</span>
+          <span class="label">down</span>
+        </div>
+      </div>
+    </div>
+    {% if down_monitors.size > 0 %}
+      <div class="hr"></div>
+      <div class="item">
+        <span class="label label--small">Down</span>
+        {% for m in down_monitors %}
+          <div class="flex flex--row flex--between w--full">
+            <span class="value value--small">{{ m.name }}</span>
+            <span class="label">{{ m.message }}</span>
+          </div>
+          {% unless forloop.last %}<div class="hr"></div>{% endunless %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Uptime Kuma{% if all_up %} · All Up{% endif %}</span>
+  </div>
+</div>

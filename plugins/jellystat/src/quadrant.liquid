@@ -1,0 +1,21 @@
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--small">{{ error }}</span>
+    </div>
+  {% else %}
+    <div class="item">
+      <span class="value value--medium">{{ hours }}</span>
+      <span class="label">hours watched</span>
+    </div>
+    {% if top_show %}
+      <div class="item">
+        <span class="value value--small">{{ top_show.name }}</span>
+        <span class="label">top show</span>
+      </div>
+    {% endif %}
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Jellystat</span>
+  </div>
+</div>

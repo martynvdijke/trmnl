@@ -1,0 +1,38 @@
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--medium">{{ error }}</span>
+    </div>
+  {% else %}
+    <div class="item">
+      <div class="flex flex--row flex--between w--full">
+        <div class="flex flex--col">
+          <span class="value value--large">{{ queries }}</span>
+          <span class="label">queries</span>
+        </div>
+        <div class="flex flex--col">
+          <span class="value value--large">{{ blocked }}</span>
+          <span class="label">blocked</span>
+        </div>
+        <div class="flex flex--col">
+          <span class="value value--large">{{ blocked_pct }}%</span>
+          <span class="label">blocked %</span>
+        </div>
+      </div>
+    </div>
+    <div class="hr"></div>
+    <div class="item">
+      <span class="label label--small">Top Blocked</span>
+      {% for d in top_blocked %}
+        <div class="flex flex--row flex--between w--full">
+          <span class="value value--small">{{ d.domain }}</span>
+          <span class="label">{{ d.count }}</span>
+        </div>
+        {% unless forloop.last %}<div class="hr"></div>{% endunless %}
+      {% endfor %}
+    </div>
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">AdGuard Home</span>
+  </div>
+</div>

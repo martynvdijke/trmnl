@@ -1,0 +1,51 @@
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--medium">{{ error }}</span>
+    </div>
+  {% else %}
+    <div class="item">
+      <div class="flex flex--row flex--between w--full">
+        <div class="flex flex--col">
+          <span class="value value--large">{{ plan_count }}</span>
+          <span class="label">plans</span>
+        </div>
+        <div class="flex flex--col">
+          <span class="value value--large">{{ last_backup_ago }}</span>
+          <span class="label">last backup</span>
+        </div>
+      </div>
+    </div>
+    {% if has_backup %}
+      <div class="item">
+        <div class="flex flex--row flex--between w--full">
+          <span class="value value--small">Status: {{ last_status }}</span>
+          {% if stale %}
+            <span class="label">stale (&gt;7d)</span>
+          {% else %}
+            <span class="label">fresh</span>
+          {% endif %}
+        </div>
+      </div>
+    {% else %}
+      <div class="item">
+        <span class="value value--small">No backups yet</span>
+      </div>
+    {% endif %}
+    {% if plan_names %}
+      <div class="hr"></div>
+      <div class="item">
+        <span class="label label--small">Plans</span>
+        {% for n in plan_names %}
+          <div class="flex flex--row flex--between w--full">
+            <span class="value value--small">{{ n }}</span>
+          </div>
+          {% unless forloop.last %}<div class="hr"></div>{% endunless %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Backrest · Backups</span>
+  </div>
+</div>

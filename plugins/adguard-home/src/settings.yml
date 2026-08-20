@@ -1,0 +1,63 @@
+id: 450311
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+framework_version: latest
+serverless_language: python
+polling_url: "{{url}}/control/stats"
+polling_headers: ''
+polling_body: ''
+id: 450311
+oauth_enabled: 'false'
+oauth_pkce_enabled: 'no'
+oauth_authorize_url: ''
+oauth_token_url: ''
+oauth_scopes: ''
+oauth_scope_separator: ''
+oauth_refresh_url: ''
+oauth_auth_params: ''
+oauth_token_headers: ''
+oauth_token_site: ''
+oauth_token_params: ''
+oauth_token_request_auth_method: ''
+oauth_body_format: ''
+oauth_token_response_metadata: ''
+oauth_authorization_method: ''
+oauth_refresh_params: ''
+oauth_token_field_name: ''
+oauth_expiry_field_name: ''
+oauth_expiry_strategy: ''
+oauth_fixed_expiry_ms: ''
+custom_fields:
+- keyname: url
+  name: Address of the AdGuard Home server
+  field_type: url
+  description: The base URL of your AdGuard Home server
+  placeholder: https://adguard.example.com
+  help_text: Please include the protocol (e.g. http or https)
+- keyname: username
+  name: AdGuard Username
+  field_type: text
+  description: Username for your AdGuard Home account
+  placeholder: Your AdGuard username
+  help_text: Used with the password for HTTP Basic auth
+- keyname: password
+  name: AdGuard Password
+  field_type: password
+  description: Password for your AdGuard Home account
+  placeholder: Your AdGuard password
+  help_text: Stored locally and sent only to your AdGuard server
+- keyname: bio
+  name: About This Plugin
+  category: entertainment
+  field_type: author_bio
+  description: I run AdGuard Home for network-wide blocking, this shows today's query and block stats.
+  github_url: https://github.com/martynvdijke/trmnl
+  learn_more_url: https://github.com/martynvdijke/trmnl
+  email_address: martyn@vandijke.xyz
+name: AdGuard Home Stats
+description: AdGuard Home stats
+refresh_interval: 360

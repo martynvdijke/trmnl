@@ -1,0 +1,21 @@
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--small">{{ error }}</span>
+    </div>
+  {% else %}
+    <div class="item">
+      <span class="value value--medium">{{ down }}</span>
+      <span class="label">down · {{ up }} up</span>
+    </div>
+    {% if down_monitors.size > 0 %}
+      <div class="item">
+        <span class="value value--small">{{ down_monitors[0].name }}</span>
+        <span class="label">first down</span>
+      </div>
+    {% endif %}
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Uptime Kuma</span>
+  </div>
+</div>

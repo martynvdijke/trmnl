@@ -1,0 +1,33 @@
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--medium">{{ error }}</span>
+    </div>
+  {% elsif count == 0 %}
+    <div class="item">
+      <span class="value value--medium">Nothing playing</span>
+    </div>
+  {% else %}
+    {% assign p = playing[0] %}
+    {% if p.poster %}<div class="item"><img class="image image-cover image-dither rounded" src="{{ p.poster }}" /></div>{% endif %}
+    <div class="item">
+      <span class="value value--medium lg:value--large">{{ p.title }}</span>
+      {% if p.subtitle %}<span class="label">{{ p.subtitle }}</span>{% endif %}
+      <div class="meta">
+        {% if p.user %}<span class="label">{{ p.user }}</span>{% endif %}
+        {% if p.paused %}<span class="label">Paused</span>{% endif %}
+      </div>
+      {% if p.runtime_min > 0 %}
+        <div class="meta">
+          <span class="label">{{ p.position_min }} / {{ p.runtime_min }} min</span>
+        </div>
+        <div class="bar grow">
+          <div class="bar__fill" style="width: {{ p.progress }}%"></div>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Now Playing</span>
+  </div>
+</div>

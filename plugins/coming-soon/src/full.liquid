@@ -1,0 +1,34 @@
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--medium">{{ error }}</span>
+    </div>
+  {% elsif count == 0 %}
+    <div class="item">
+      <span class="value value--large">Nothing soon</span>
+      <span class="label">No releases in the next {{ window_days }} days</span>
+    </div>
+  {% else %}
+    {% for it in items %}
+      <div class="item">
+        <div class="columns">
+          <div class="column">
+            {% if it.poster %}<img class="image image-cover image-dither rounded" src="{{ it.poster }}" />{% endif %}
+          </div>
+          <div class="column w--full">
+            <span class="value value--medium lg:value--large">{{ it.title }}</span>
+            {% if it.subtitle %}<span class="label">{{ it.subtitle }}</span>{% endif %}
+            <div class="meta">
+              <span class="label">{{ it.kind }}</span>
+              <span class="label">{{ it.air }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% unless forloop.last %}<div class="hr"></div>{% endunless %}
+    {% endfor %}
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Coming Soon · {{ count }} in {{ window_days }}d</span>
+  </div>
+</div>

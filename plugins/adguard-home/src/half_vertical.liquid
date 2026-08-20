@@ -1,0 +1,25 @@
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--medium">{{ error }}</span>
+    </div>
+  {% else %}
+    <div class="item">
+      <span class="value value--large">{{ blocked_pct }}%</span>
+      <span class="label">blocked</span>
+    </div>
+    <div class="item">
+      <span class="value value--medium">{{ blocked }}</span>
+      <span class="label">of {{ queries }} queries</span>
+    </div>
+    {% if top_blocked_domain %}
+      <div class="item">
+        <span class="value value--small">{{ top_blocked_domain }}</span>
+        <span class="label">top blocked</span>
+      </div>
+    {% endif %}
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">AdGuard Home</span>
+  </div>
+</div>

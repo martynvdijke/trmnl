@@ -1,0 +1,25 @@
+{% if error %}
+<div class="layout layout--col gap--small">
+  <div class="item">
+    <div class="content">
+      <div class="value value--small">{{ error }}</div>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="layout layout--col gap--small">
+  <div class="title_bar">
+    <div class="title">Booklore</div>
+    <div class="meta">{{ total_books }}</div>
+  </div>
+  <div class="item">
+    <div class="content">
+      <div class="value value--medium">{{ total_books }}</div>
+      <div class="label label--small">books</div>
+      {% if reading_count > 0 %}
+      <div class="meta">{{ reading_count }} reading</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endif %}

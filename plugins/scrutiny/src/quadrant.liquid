@@ -1,0 +1,21 @@
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--small">{{ error }}</span>
+    </div>
+  {% else %}
+    <div class="item">
+      <span class="value value--medium">{{ total }}</span>
+      <span class="label">drives · {{ failed_count }} failed</span>
+    </div>
+    {% if failed_count > 0 %}
+      <div class="item">
+        <span class="value value--small">{{ failed | join: ", " }}</span>
+        <span class="label">failing</span>
+      </div>
+    {% endif %}
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Scrutiny</span>
+  </div>
+</div>

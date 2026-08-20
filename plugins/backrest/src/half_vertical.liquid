@@ -1,0 +1,19 @@
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--medium">{{ error }}</span>
+    </div>
+  {% else %}
+    <div class="item">
+      <span class="value value--large">{{ last_backup_ago }}</span>
+      <span class="label">last backup</span>
+    </div>
+    <div class="item">
+      <span class="value value--medium">{{ plan_count }}</span>
+      <span class="label">plans{% if stale %} · stale{% endif %}</span>
+    </div>
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Backrest</span>
+  </div>
+</div>

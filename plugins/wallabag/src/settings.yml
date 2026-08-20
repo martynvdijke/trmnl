@@ -1,0 +1,75 @@
+id: 450309
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: post
+framework_version: latest
+serverless_language: python
+polling_url: "{{url}}/oauth/v2/token"
+polling_headers: Content-Type=application/x-www-form-urlencoded
+polling_body: grant_type=password&client_id={{client_id}}&client_secret={{client_secret}}&username={{username}}&password={{password}}
+id: 450309
+oauth_enabled: 'false'
+oauth_pkce_enabled: 'no'
+oauth_authorize_url: ''
+oauth_token_url: ''
+oauth_scopes: ''
+oauth_scope_separator: ''
+oauth_refresh_url: ''
+oauth_auth_params: ''
+oauth_token_headers: ''
+oauth_token_site: ''
+oauth_token_params: ''
+oauth_token_request_auth_method: ''
+oauth_body_format: ''
+oauth_token_response_metadata: ''
+oauth_authorization_method: ''
+oauth_refresh_params: ''
+oauth_token_field_name: ''
+oauth_expiry_field_name: ''
+oauth_expiry_strategy: ''
+oauth_fixed_expiry_ms: ''
+custom_fields:
+- keyname: url
+  name: Address of Wallabag
+  field_type: url
+  description: The base URL of your Wallabag instance
+  placeholder: https://wallabag.example.com
+  help_text: Please include the protocol (e.g. http or https)
+- keyname: client_id
+  name: Wallabag Client ID
+  field_type: text
+  description: OAuth2 client ID from your Wallabag API client
+  placeholder: Your client id
+  help_text: 'Create an API client in Wallabag: Settings > API clients'
+- keyname: client_secret
+  name: Wallabag Client Secret
+  field_type: password
+  description: OAuth2 client secret from your Wallabag API client
+  placeholder: Your client secret
+  help_text: Stored securely and only sent to your Wallabag instance
+- keyname: username
+  name: Wallabag Username
+  field_type: text
+  description: Your Wallabag username
+  placeholder: user
+  help_text: The username you use to sign in to Wallabag
+- keyname: password
+  name: Wallabag Password
+  field_type: password
+  description: Your Wallabag password
+  placeholder: Your password
+  help_text: Stored securely and only sent to your Wallabag instance
+- keyname: bio
+  name: About This Plugin
+  category: entertainment
+  field_type: author_bio
+  description: I save articles in Wallabag, this shows how many are unread.
+  github_url: https://github.com/martynvdijke/trmnl
+  learn_more_url: https://github.com/martynvdijke/trmnl
+  email_address: martyn@vandijke.xyz
+name: Wallabag
+description: Wallabag unread count
+refresh_interval: 360

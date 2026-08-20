@@ -1,0 +1,20 @@
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--small">{{ error }}</span>
+    </div>
+  {% elsif has_session == false %}
+    <div class="item">
+      <span class="value value--small">Nothing playing</span>
+    </div>
+  {% else %}
+    <div class="item">
+      <span class="value value--medium">{{ title }}</span>
+      {% if author %}<span class="label">{{ author }}</span>{% endif %}
+      <span class="label">{{ progress }}%</span>
+    </div>
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Listening</span>
+  </div>
+</div>
