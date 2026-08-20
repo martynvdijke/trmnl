@@ -29,9 +29,15 @@ jobs:
         with:
           python-version: "3.12"
       - run: python3 -m py_compile plugins/*/src/transform.py
-      - run: python3 tests/test_transform.py
-      - run: python3 tests/test_limits_transform.py
-      - run: python3 plugins/boardgamegeek/tests/test_boardgamegeek_transform.py
+      - run: python3 -m unittest discover -s tests -v
+      - name: Run plugin transform tests
+        run: |
+          set -e
+          for f in plugins/*/tests/test_*.py; do
+            [ -e "$f" ] || continue
+            echo "Running $f"
+            python3 "$f"
+          done
 
   otel:
     permissions:
