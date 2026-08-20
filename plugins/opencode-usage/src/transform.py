@@ -266,7 +266,7 @@ def run(input_data):
     data = input_data.get("data") if isinstance(input_data, dict) else None
     if not isinstance(data, list):
         return {
-            "error": "Could not read the session list. Check the url custom field."
+            "error": "Could not read the session list from https://opencode.vandijke.xyz."
         }
 
     tz = _tz(timezone)

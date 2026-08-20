@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo.svg" width="220" alt="TRMNL monorepo logo — e-ink device with plugin grid"/>
+</p>
+
 # trmnl
 
 Custom TRMNL plugins and the Immich photo proxy middleware, consolidated into a single monorepo.

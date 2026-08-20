@@ -19,16 +19,19 @@ _spec.loader.exec_module(transform)
 
 FIXTURE = os.path.join(os.path.dirname(__file__), "fixture.json")
 
-FIELDS = ("url", "api_key", "timezone")
+FIELDS = ("api_key", "timezone")
 
 
 def _input(fixture, url="https://opencode.example.com", timezone="UTC"):
     with open(fixture) as fh:
         payload = json.load(fh)
+    # url param kept for backwards compat but is no longer required — the
+    # OpenCode server is now hardcoded to https://opencode.vandijke.xyz and
+    # the transform no longer errors when it is absent.
+    _ = url  # intentionally unused; kept to avoid breaking call sites
     payload["trmnl"] = {
         "plugin_settings": {
             "custom_fields_values": {
-                "url": url,
                 "api_key": "",
                 "timezone": timezone,
             }
@@ -39,16 +42,15 @@ def _input(fixture, url="https://opencode.example.com", timezone="UTC"):
 
 class TransformTest(unittest.TestCase):
     def test_missing_url(self):
+        # Server URL is now hardcoded; missing url should NOT error.
         out = transform.run(_input(FIXTURE, url=""))
-        self.assertIn("error", out)
-        self.assertIn("url", out["error"])
+        self.assertNotIn("error", out)
 
     def test_no_data(self):
         payload = {
             "data": [],
             "trmnl": {"plugin_settings": {"custom_fields_values": dict.fromkeys(FIELDS, "")}},
         }
-        payload["trmnl"]["plugin_settings"]["custom_fields_values"]["url"] = "https://x"
         out = transform.run(payload)
         self.assertIn("error", out)
 

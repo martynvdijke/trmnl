@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>TRMNL Logo — Preview</title>
+<style>
+  :root { --bg: #0b0b0c; --paper: #fdfbf5; --muted:#9a9a9a; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family: JetBrains Mono, ui-monospace, monospace; background: var(--bg); color: var(--paper); min-height:100vh; display:grid; place-items:center; padding:40px; }
+  .wrap { max-width: 1100px; width:100%; }
+  h1 { font-size: 14px; letter-spacing: 4px; color: var(--muted); margin-bottom: 8px; }
+  h2 { font-size: 28px; letter-spacing: -1px; margin-bottom: 24px; }
+  p { color: #b8b8b8; line-height:1.6; max-width: 640px; font-size: 13px; }
+  .grid { display:grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 32px 0; }
+  @media (max-width: 700px){ .grid{grid-template-columns:1fr} }
+  .card { background: var(--paper); border-radius: 18px; padding: 24px; display:grid; place-items:center; }
+  .card.dark { background: #0b0b0c; border:1px solid #222; }
+  .card img, .card svg { width: 100%; max-width: 320px; height:auto; }
+  .meta { display:flex; gap:12px; flex-wrap:wrap; margin-top:16px; }
+  .pill { font-size:11px; border:1px solid #333; padding:6px 10px; border-radius:999px; color:#aaa; }
+  code { background:#1a1a1c; padding:2px 6px; border-radius:6px; font-size:12px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>TRMNL • MONOREPO</h1>
+    <h2>E-ink homelab logo</h2>
+    <p>
+      1-bit e-paper aesthetic: thick bezel, warm paper screen, and a 3×3 grid where each cell is a plugin family.
+      Center cell is inverted — the TRMNL core. Works at 16px favicon up to 1024px social preview. Single SVG, no fonts required.
+    </p>
+    <div class="grid">
+      <div class="card"><img src="./logo.svg" alt="logo on light"/></div>
+      <div class="card dark"><img src="./logo.svg" alt="logo on dark" style="filter: brightness(1)"/></div>
+    </div>
+    <div class="meta">
+      <span class="pill">400×400 viewBox</span>
+      <span class="pill">1-bit black/white + #FDFBF5 paper</span>
+      <span class="pill">JetBrains Mono fallback → system mono</span>
+      <span class="pill">no embedded bitmaps</span>
+    </div>
+    <p style="margin-top:24px">
+      <strong>Usage:</strong> <code>&lt;img src="assets/logo.svg" width="64"&gt;</code> in README. Export PNG via <code>rsvg-convert -w 1024 assets/logo.svg -o assets/logo.png</code>.
+      Social preview: place on <code>#0B0B0C</code> with 64px padding.
+    </p>
+    <p style="margin-top:12px; font-size:11px; color:#777">
+      Glyphs — cam (immich), film (jellyfin), book (mealie/booklore), shield (adguard), grid (trmnl), graph (opencode), dice (boardgamegeek), disk stack (scrutiny/backrest), rss (freshrss/wallabag). Replace center label for per-plugin variants.
+    </p>
+  </div>
+</body>
+</html>

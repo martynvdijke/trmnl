@@ -1,0 +1,20 @@
+<!-- TRMNL mark — 1:1 favicon, derived from logo.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <rect x="2" y="2" width="96" height="96" rx="18" fill="#0B0B0C"/>
+  <rect x="10" y="10" width="80" height="80" rx="12" fill="#FDFBF5" stroke="#0B0B0C" stroke-width="1.5"/>
+  <!-- centered grid 2x2 minimal -->
+  <g stroke="#0B0B0C" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="22" y="22" width="28" height="28" rx="6" fill="#0B0B0C" stroke="#0B0B0C"/>
+    <!-- inverted TRMNL on black -->
+    <g stroke="#FDFBF5">
+      <rect x="26" y="26" width="20" height="14" rx="2" fill="none"/>
+      <line x1="26" y1="33" x2="46" y2="33"/><line x1="36" y1="26" x2="36" y2="40"/>
+    </g>
+    <rect x="54" y="22" width="28" height="28" rx="6"/>
+    <polyline points="58,40 64,30 68,36 74,28 78,34" stroke-width="1.2"/>
+    <rect x="22" y="54" width="28" height="28" rx="6"/>
+    <ellipse cx="36" cy="62" rx="8" ry="4"/><path d="M28 62 L28 70 C28 73 32 75 36 75 C40 75 44 73 44 70 L44 62"/>
+    <rect x="54" y="54" width="28" height="28" rx="6"/>
+    <path d="M58 74 A10 10 0 0 1 74 58"/><path d="M58 68 A4 4 0 0 1 68 58"/><circle cx="58" cy="74" r="1.6" fill="#0B0B0C" stroke="none"/>
+  </g>
+</svg>
