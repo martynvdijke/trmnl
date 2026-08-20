@@ -22,6 +22,7 @@ Run order:
 import urllib.parse
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import http.client
+from socketserver import ThreadingMixIn
 
 UPSTREAM_HOST = '127.0.0.1'
 UPSTREAM_PORT = 4568
@@ -103,5 +104,9 @@ class Proxy(BaseHTTPRequestHandler):
         pass
 
 
+class ThreadingHTTPServer(ThreadingMixIn, HTTPServer):
+    daemon_threads = True
+
+
 if __name__ == '__main__':
-    HTTPServer(('0.0.0.0', 4567), Proxy).serve_forever()
+    ThreadingHTTPServer(('0.0.0.0', 4567), Proxy).serve_forever()
