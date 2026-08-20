@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="Forgejo">
+  <rect x="1" y="1" width="62" height="62" rx="13" fill="#FDFBF5" stroke="#0B0B0C" stroke-width="2"/>
+  <g><path d="M18 48l13-13M36 20l8-8 8 8-8 8M31 35l-7-7 8-8"/><path d="M12 52h40"/></g>
+  <path d="M10 56h44" stroke="#0B0B0C" stroke-width="1" opacity=".25"/>
+  <text x="32" y="61" text-anchor="middle" font-family="ui-monospace,monospace" font-size="4.3" font-weight="700" letter-spacing=".55" fill="#0B0B0C">FORGEJO</text>
+</svg>
