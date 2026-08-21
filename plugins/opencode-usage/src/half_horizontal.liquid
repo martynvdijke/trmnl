@@ -1,48 +1,21 @@
-<div class="layout layout--row layout--stretch gap">
-  {% if error %}
-    <div class="item">
-      <div class="content flex flex--col w--full">
-        <span class="value value--medium">{{ error }}</span>
-      </div>
+{%- comment -%} Layout only — data prep + oc_* partials live in src/shared.liquid. {%- endcomment -%}
+<div class="layout layout--col gap--space-between bg--gray-70 p--4">
+  {%- if error != blank -%}
+    {% render "oc_notice" with title: "Not connected", body: error %}
+  {%- elsif has_data -%}
+    <div class="grid h--40 grow mb--2">
+      {% render "oc_chart" with token_points: token_points, cost_points: cost_points %}
     </div>
-  {% else %}
-    <div class="item content flex flex--col w--full">
-      <div class="flex flex--row flex--between flex--center-y gap w--full">
-        <div class="flex flex--col">
-          <span class="value value--large">{{ totals[0].sessions }}</span>
-          <span class="label">sessions today</span>
-        </div>
-        <div class="flex flex--col">
-          <span class="label">{{ totals[0].cost_display }}</span>
-          <span class="label">{{ totals[0].tokens_display }} tokens · {{ timezone }}</span>
-        </div>
-      </div>
-      <div class="flex flex--row flex--between flex--center-y gap w--full">
-        <div class="flex flex--col">
-          <span class="value value--medium lg:value--large">{{ totals[2].sessions }}</span>
-          <span class="label">sessions in 30 days</span>
-        </div>
-        <div class="flex flex--col">
-          <span class="label">{{ totals[2].cost_display }}</span>
-          <span class="label">{{ totals[2].tokens_display }} tokens</span>
-        </div>
-      </div>
+
+    <div class="grid grid--cols-2 gap--small">
+      {% render "oc_metric" with value: totals[0].sessions, label: "Today", sub: totals[0].cost_display %}
+      {% render "oc_metric" with value: totals[1].sessions, label: "Last 7 days", sub: totals[1].cost_display %}
+      {% render "oc_metric" with value: totals[2].sessions, label: "Last 30 days", sub: totals[2].cost_display %}
+      {% render "oc_metric" with value: totals[3].tokens_display, label: "All time tokens", sub: totals[3].cost_display %}
     </div>
-    <div class="item content flex flex--col w--full">
-      <span class="value value--small">Last 24h spend</span>
-      {% for hour in hourly %}
-        <div class="flex flex--row flex--between flex--center-y gap w--full">
-          <span class="label">{{ hour.label }} · {{ hour.sessions }}</span>
-          <div class="bar grow">
-            <div class="bar__fill" style="width: {{ hour.pct }}%"></div>
-          </div>
-        </div>
-      {% endfor %}
-      <div class="hr"></div>
-      <span class="label">12 wk · {{ weekly_total_tokens_display }} tokens · {{ weekly_total_cost_display }}</span>
-    </div>
-  {% endif %}
-  <div class="title_bar">
-    <span class="title">OpenCode Usage · {{ generated_at }}</span>
-  </div>
+  {%- else -%}
+    {% render "oc_notice" with title: no_data_title, body: no_data_body %}
+  {%- endif -%}
 </div>
+
+{% render "oc_title_bar" with trmnl: trmnl, stamp: generated_at, tz: timezone %}

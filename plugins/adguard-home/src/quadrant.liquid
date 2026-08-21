@@ -1,22 +1,17 @@
-{% comment %}TRMNL fields: {{ url }} {{ username }} {{ password }}{% endcomment %}
-<div class="layout layout--col layout--stretch gap">
-  {% if error %}
-    <div class="item">
-      <span class="value value--small">{{ error }}</span>
+{%- comment -%} Layout only — data prep + ag_* partials live in src/shared.liquid. {%- endcomment -%}
+<div class="layout layout--col gap--space-between bg--gray-70 p--4">
+  {%- if error != blank -%}
+    {% render "ag_notice" with title: "Not connected", body: error %}
+  {%- elsif has_data -%}
+    <div class="grid grid--cols-2 portrait:grid--cols-1 lg:portrait:grid--cols-2 gap--small">
+      {% render "ag_metric" with value: queries, label: "DNS Queries", value_class: "value--small lg:value--large", sub_class: "hidden lg:inline-flex" %}
+      {% render "ag_metric" with value: blocked, label: "Blocked", value_class: "value--small lg:value--large", sub_class: "hidden lg:inline-flex" %}
+      {% render "ag_metric" with value: blocked_pct, label: "Blocked", sub: "of all queries", value_suffix: "%", value_class: "value--small lg:value--large", sub_class: "hidden lg:inline-flex" %}
+      {% render "ag_metric" with value: top_blocked_domain, label: "Top blocked", value_class: "value--xsmall lg:value--small", sub_class: "hidden lg:inline-flex" %}
     </div>
-  {% else %}
-    <div class="item">
-      <span class="value value--medium">{{ blocked_pct }}%</span>
-      <span class="label">blocked</span>
-    </div>
-    {% if top_blocked_domain %}
-      <div class="item">
-        <span class="value value--small">{{ top_blocked_domain }}</span>
-        <span class="label">top blocked</span>
-      </div>
-    {% endif %}
-  {% endif %}
-  <div class="title_bar">
-    <span class="title">AdGuard Home</span>
-  </div>
+  {%- else -%}
+    {% render "ag_notice" with title: no_data_title, body: no_data_body %}
+  {%- endif -%}
 </div>
+
+{% render "ag_title_bar" with trmnl: trmnl, top_domain: top_blocked_domain %}

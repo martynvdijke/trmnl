@@ -37,6 +37,54 @@ def _normalize_blocked(entry):
     return {"domain": "", "count": 0}
 
 
+def _hourly_series(stats):
+    """Per-hour [{ts, y}] points for DNS queries and blocked requests.
+
+    /control/stats returns parallel arrays of hourly values, oldest first,
+    covering roughly the last 24 hours (the newest bucket is the current
+    partial hour). Timestamps are reconstructed backwards from the current
+    hour so the chart's x axis lines up with wall-clock time even though
+    AdGuard does not send them.
+    """
+    def arr(key):
+        v = stats.get(key)
+        return v if isinstance(v, list) else []
+
+    query_counts = arr("num_dns_queries")
+    n = len(query_counts)
+    if n == 0:
+        return [], []
+
+    import datetime
+
+    hour_start = datetime.datetime.now(datetime.timezone.utc).replace(
+        minute=0, second=0, microsecond=0
+    )
+
+    def stamps():
+        base = int(hour_start.timestamp())
+        return [base - (n - 1 - i) * 3600 for i in range(n)]
+
+    blocked_per_hour = []
+    raw_blocked = [
+        arr("num_blocked_filtering"),
+        arr("num_replaced_safebrowsing"),
+        arr("num_replaced_parental"),
+        arr("num_replaced_safesearch"),
+    ]
+    for i in range(n):
+        total = 0
+        for source in raw_blocked:
+            if len(source) == n:
+                total += _num(source[i])
+        blocked_per_hour.append(total)
+
+    ts = stamps()
+    queries_series = [{"ts": ts[i], "y": _num(query_counts[i])} for i in range(n)]
+    blocked_series = [{"ts": ts[i], "y": blocked_per_hour[i]} for i in range(n)]
+    return queries_series, blocked_series
+
+
 def run(input):
     url = ""
     username = ""
@@ -80,12 +128,16 @@ def run(input):
     top_blocked = [_normalize_blocked(e) for e in top_raw[:3]]
     top_blocked_domain = top_blocked[0]["domain"] if top_blocked else ""
 
+    queries_series, blocked_series = _hourly_series(stats)
+
     return {
         "queries": queries,
         "blocked": blocked,
         "blocked_pct": blocked_pct,
         "top_blocked": top_blocked,
         "top_blocked_domain": top_blocked_domain,
+        "queries_series": queries_series,
+        "blocked_series": blocked_series,
     }
 
 

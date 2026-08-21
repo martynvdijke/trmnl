@@ -183,6 +183,7 @@ def _build_series(sessions, now_local, bucket_size, count, label_fmt):
         series.append(
             {
                 "label": start.strftime(label_fmt),
+                "ts": int(start.timestamp()),
                 "sessions": agg["sessions"],
                 "cost": agg["cost"],
                 "cost_display": _fmt_cost(agg["cost"]),
@@ -217,6 +218,7 @@ def _build_weekly(sessions, now_local, count=12):
         series.append(
             {
                 "label": start.strftime("%b %d"),
+                "ts": int(start.timestamp()),
                 "tokens": agg["tokens"],
                 "tokens_display": _fmt_tokens(agg["tokens"]),
                 "cost": round(agg["cost"], 2),

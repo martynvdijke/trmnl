@@ -1,37 +1,26 @@
-<div class="layout layout--col layout--stretch gap">
-  {% if error %}
-    <div class="item">
-      <div class="content flex flex--col w--full">
-        <span class="value value--medium">{{ error }}</span>
-      </div>
+{%- comment -%} Layout only — data prep + oc_* partials live in src/shared.liquid. {%- endcomment -%}
+<div class="layout layout--col gap--space-between bg--gray-70 p--4">
+  {%- if error != blank -%}
+    {% render "oc_notice" with title: "Not connected", body: error %}
+  {%- elsif has_data -%}
+    {%- comment -%}
+      No room for the chart on OG; X re-shows it. Deliberately NOT "grid hidden
+      lg:grid": the framework re-emits .grid after .hidden, so a base grid class
+      would win the cascade and unhide the chart everywhere.
+    {%- endcomment -%}
+    <div class="hidden lg:grid h--40 lg:grow lg:mb--2">
+      {% render "oc_chart" with token_points: token_points, cost_points: cost_points %}
     </div>
-  {% else %}
-    <div class="item">
-      <div class="content flex flex--col w--full">
-        <span class="value value--large">{{ totals[0].sessions }}</span>
-        <span class="label">sessions today · {{ totals[0].cost_display }} · {{ totals[0].tokens_display }} · {{ timezone }}</span>
-      </div>
+
+    <div class="grid grid--cols-2 portrait:grid--cols-1 lg:portrait:grid--cols-2 gap--small">
+      {% render "oc_metric" with value: totals[0].sessions, label: "Today", sub: totals[0].cost_display %}
+      {% render "oc_metric" with value: totals[1].sessions, label: "Last 7 days", sub: totals[1].cost_display %}
+      {% render "oc_metric" with value: totals[2].sessions, label: "Last 30 days", sub: totals[2].cost_display %}
+      {% render "oc_metric" with value: totals[3].tokens_display, label: "All time tokens", sub: totals[3].cost_display %}
     </div>
-    <div class="hr"></div>
-    <div class="item">
-      {% for day in daily %}
-        <div class="w--full">
-          <span class="label">{{ day.label }} · {{ day.sessions }} · {{ day.cost_display }}</span>
-        </div>
-      {% endfor %}
-    </div>
-    {% if models.size > 0 %}
-      <div class="hr"></div>
-      <div class="item">
-        {% for model in models %}
-          <div class="w--full">
-            <span class="label">{{ model.name }} · {{ model.cost_display }} ({{ model.pct }}%)</span>
-          </div>
-        {% endfor %}
-      </div>
-    {% endif %}
-  {% endif %}
-  <div class="title_bar">
-    <span class="title">OpenCode Usage · {{ generated_at }}</span>
-  </div>
+  {%- else -%}
+    {% render "oc_notice" with title: no_data_title, body: no_data_body %}
+  {%- endif -%}
 </div>
+
+{% render "oc_title_bar" with trmnl: trmnl, stamp: generated_at, tz: timezone %}

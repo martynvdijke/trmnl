@@ -1,58 +1,17 @@
-<div class="layout layout--col layout--stretch gap">
-  {% if error %}
-    <div class="item">
-      <div class="content flex flex--col w--full">
-        <span class="value value--medium">{{ error }}</span>
-      </div>
+{%- comment -%} Layout only — data prep + oc_* partials live in src/shared.liquid. {%- endcomment -%}
+<div class="layout layout--col gap--space-between bg--gray-70 p--4">
+  {%- if error != blank -%}
+    {% render "oc_notice" with title: "Not connected", body: error %}
+  {%- elsif has_data -%}
+    <div class="grid grid--cols-2 portrait:grid--cols-1 lg:portrait:grid--cols-2 gap--small">
+      {% render "oc_metric" with value: totals[0].sessions, label: "Today", sub: totals[0].cost_display, value_class: "value--small lg:value--large", sub_class: "hidden lg:inline-flex" %}
+      {% render "oc_metric" with value: totals[1].sessions, label: "Last 7 days", sub: totals[1].cost_display, value_class: "value--small lg:value--large", sub_class: "hidden lg:inline-flex" %}
+      {% render "oc_metric" with value: totals[2].sessions, label: "Last 30 days", sub: totals[2].cost_display, value_class: "value--small lg:value--large", sub_class: "hidden lg:inline-flex" %}
+      {% render "oc_metric" with value: totals[3].tokens_display, label: "All time tokens", sub: totals[3].cost_display, value_class: "value--small lg:value--large", sub_class: "hidden lg:inline-flex" %}
     </div>
-  {% else %}
-    <div class="item content flex flex--col w--full">
-      <div class="flex flex--row flex--between flex--center-y gap w--full">
-        <div class="flex flex--col">
-          <span class="value value--medium lg:value--large">{{ totals[0].sessions }}</span>
-          <span class="label">today</span>
-        </div>
-        <span class="label">{{ totals[0].cost_display }} · {{ timezone }}</span>
-      </div>
-      <div class="flex flex--row flex--between flex--center-y gap w--full">
-        <div class="flex flex--col">
-          <span class="value value--medium lg:value--large">{{ totals[1].sessions }}</span>
-          <span class="label">7 days</span>
-        </div>
-        <span class="label">{{ totals[1].cost_display }}</span>
-      </div>
-      <div class="flex flex--row flex--between flex--center-y gap w--full">
-        <div class="flex flex--col">
-          <span class="value value--medium lg:value--large">{{ totals[2].sessions }}</span>
-          <span class="label">30 days</span>
-        </div>
-        <span class="label">{{ totals[2].cost_display }}</span>
-      </div>
-      <div class="flex flex--row flex--between flex--center-y gap w--full">
-        <div class="flex flex--col">
-          <span class="value value--medium lg:value--large">{{ totals[3].sessions }}</span>
-          <span class="label">all time</span>
-        </div>
-        <span class="label">{{ totals[3].cost_display }}</span>
-      </div>
-    </div>
-    <div class="hr"></div>
-    <div class="item">
-      <span class="value value--small">Streams (all time)</span>
-      <div class="w--full">
-        <span class="label">input {{ streams.input_display }} · output {{ streams.output_display }}</span>
-      </div>
-      <div class="w--full">
-        <span class="label">reasoning {{ streams.reasoning_display }} · cache read {{ streams.cache_read_display }}</span>
-      </div>
-      {% if models.size > 0 %}
-        <div class="w--full">
-          <span class="label">top: {{ models[0].name }} {{ models[0].cost_display }}</span>
-        </div>
-      {% endif %}
-    </div>
-  {% endif %}
-  <div class="title_bar">
-    <span class="title">OpenCode Usage · {{ generated_at }}</span>
-  </div>
+  {%- else -%}
+    {% render "oc_notice" with title: no_data_title, body: no_data_body %}
+  {%- endif -%}
 </div>
+
+{% render "oc_title_bar" with trmnl: trmnl, stamp: generated_at, tz: timezone %}

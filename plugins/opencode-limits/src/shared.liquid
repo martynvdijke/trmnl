@@ -1,0 +1,75 @@
+{%- comment -%}
+  Shared data prep — trmnlp automatically prepends this file (src/shared.liquid)
+  to every view, so the variables and {% template %} partials below are
+  available in all layouts.
+
+  Source: src/transform.py reshapes the OpenCode Go /usage response into
+    limits — [rolling, weekly, monthly], each with percent, level
+    (success/warning/error), status and reset countdowns
+    worst — the most-consumed limit
+
+  Style follows the Umami Stats reference: dark gray canvas, white cards.
+  There is no time-series data here, so no chart — just metric tiles.
+{%- endcomment -%}
+{%- assign has_data = false -%}
+{%- if limits != blank and limits.size > 0 -%}{%- assign has_data = true -%}{%- endif -%}
+
+{%- comment -%}
+  lm_metric — one white metric tile: big number + label + a secondary line.
+  Params: value (number|string|nil), label, sub (string|nil),
+  value_suffix (appended to the number), value_class (size classes, default
+  value--large), sub_class (extra classes on the sub line). Isolated scope.
+{%- endcomment -%}
+{% template lm_metric %}
+<div class="item bg--white rounded--medium">
+  <div class="content w--full">
+    <div class="px--4 pt--4 w--full">
+      <span class="value value--tnums {{ value_class }}" data-fit-value="true">
+        {%- if value == blank -%}
+          —
+        {%- else -%}
+          {{- value -}}{{- value_suffix -}}
+        {%- endif -%}
+      </span>
+    </div>
+    <span class="label px--4">{{ label }}</span>
+    <span class="label px--4 pb--4 {{ sub_class }}">
+      {%- if sub == blank -%}
+        —
+      {%- else -%}
+        {{- sub -}}
+      {%- endif -%}
+    </span>
+  </div>
+</div>
+{% endtemplate %}
+
+{%- comment -%}
+  lm_notice — full-width message tile for the error state.
+  Params: title (string), body (string).
+{%- endcomment -%}
+{% template lm_notice %}
+<div class="grid">
+  <div class="item bg--white rounded--medium p--4">
+    <div class="content">
+      <span class="value value--large lg:value--xlarge">{{ title }}</span>
+      <span class="label">{{ body }}</span>
+    </div>
+  </div>
+</div>
+{% endtemplate %}
+
+{%- comment -%}
+  lm_title_bar — shared footer. Params: trmnl (namespace), all_ok_flag, stamp,
+  tightest (label of the most-consumed limit) and resets_in — render scope is
+  isolated, so values must be passed in explicitly.
+{%- endcomment -%}
+{% template lm_title_bar %}
+<div class="title_bar bg--white">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line>
+  </svg>
+  <span class="title">OpenCode Limits</span>
+  <span class="instance">{%- if all_ok_flag %}All OK · {{ stamp }}{% elsif resets_in != blank %}{{ tightest }} resets in {{ resets_in }}{% else %}{{ stamp }}{% endif -%}</span>
+</div>
+{% endtemplate %}

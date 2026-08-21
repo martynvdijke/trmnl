@@ -1,39 +1,21 @@
-{% comment %}TRMNL fields: {{ url }} {{ username }} {{ password }}{% endcomment %}
-<div class="layout layout--col layout--stretch gap">
-  {% if error %}
-    <div class="item">
-      <span class="value value--medium">{{ error }}</span>
+{%- comment -%} Layout only — data prep + ag_* partials live in src/shared.liquid. {%- endcomment -%}
+<div class="layout layout--col gap--space-between bg--gray-70 p--4">
+  {%- if error != blank -%}
+    {% render "ag_notice" with title: "Not connected", body: error %}
+  {%- elsif has_data -%}
+    <div class="grid h--52 sm:grow sm:mb--2">
+      {% render "ag_chart" with q_points: queries_series, b_points: blocked_series %}
     </div>
-  {% else %}
-    <div class="item">
-      <div class="flex flex--row flex--between w--full">
-        <div class="flex flex--col">
-          <span class="value value--large">{{ queries }}</span>
-          <span class="label">queries</span>
-        </div>
-        <div class="flex flex--col">
-          <span class="value value--large">{{ blocked }}</span>
-          <span class="label">blocked</span>
-        </div>
-        <div class="flex flex--col">
-          <span class="value value--large">{{ blocked_pct }}%</span>
-          <span class="label">blocked %</span>
-        </div>
-      </div>
+
+    <div class="grid grid--cols-4 portrait:grid--cols-2 gap--small">
+      {% render "ag_metric" with value: queries, label: "DNS Queries" %}
+      {% render "ag_metric" with value: blocked, label: "Blocked" %}
+      {% render "ag_metric" with value: blocked_pct, label: "Blocked", sub: "of all queries", value_suffix: "%" %}
+      {% render "ag_metric" with value: top_blocked_domain, label: "Top blocked", value_class: "value--small lg:value--medium" %}
     </div>
-    <div class="hr"></div>
-    <div class="item">
-      <span class="label label--small">Top Blocked</span>
-      {% for d in top_blocked %}
-        <div class="flex flex--row flex--between w--full">
-          <span class="value value--small">{{ d.domain }}</span>
-          <span class="label">{{ d.count }}</span>
-        </div>
-        {% unless forloop.last %}<div class="hr"></div>{% endunless %}
-      {% endfor %}
-    </div>
-  {% endif %}
-  <div class="title_bar">
-    <span class="title">AdGuard Home</span>
-  </div>
+  {%- else -%}
+    {% render "ag_notice" with title: no_data_title, body: no_data_body %}
+  {%- endif -%}
 </div>
+
+{% render "ag_title_bar" with trmnl: trmnl, top_domain: top_blocked_domain %}

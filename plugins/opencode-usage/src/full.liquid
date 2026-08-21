@@ -1,113 +1,21 @@
-<div class="layout layout--col layout--stretch">
-  {% if error %}
-    <div class="item">
-      <div class="content flex flex--col w--full">
-        <span class="value value--medium">{{ error }}</span>
-      </div>
+{%- comment -%} Layout only — data prep + oc_* partials live in src/shared.liquid. {%- endcomment -%}
+<div class="layout layout--col gap--space-between bg--gray-70 p--4">
+  {%- if error != blank -%}
+    {% render "oc_notice" with title: "Not connected", body: error %}
+  {%- elsif has_data -%}
+    <div class="grid h--52 sm:grow sm:mb--2">
+      {% render "oc_chart" with token_points: token_points, cost_points: cost_points %}
     </div>
-  {% else %}
-    {% assign chart_id = "usage-chart-" | append_random %}
-    <div class="item flex flex--col w--full grow">
-      <div class="content flex flex--col w--full grow">
-        <div class="flex flex--row flex--between flex--center-y w--full">
-          <div class="flex flex--col">
-            <span id="usage-chart-heading" class="label">12 WEEK TOKENS / COST</span>
-            <span id="usage-chart-value" class="value value--medium lg:value--large">{{ weekly_total_tokens_display }} · {{ weekly_total_cost_display }}</span>
-          </div>
-          <div class="flex flex--col flex--right">
-            <span class="label">{{ totals[2].sessions }} sessions · {{ totals[2].tokens_display }} tokens</span>
-            <div class="flex flex--row gap">
-              <button id="usage-weekly-toggle" class="label label--small">WEEKLY</button>
-              <button id="usage-cost-toggle" class="label label--small">COST</button>
-              <button id="usage-sessions-toggle" class="label label--small">SESSIONS</button>
-            </div>
-          </div>
-        </div>
 
-        <div id="{{ chart_id }}" class="w--full grow bg--black rounded"></div>
-      </div>
+    <div class="grid grid--cols-4 portrait:grid--cols-2 gap--small">
+      {% render "oc_metric" with value: totals[0].sessions, label: "Today", sub: totals[0].cost_display %}
+      {% render "oc_metric" with value: totals[1].sessions, label: "Last 7 days", sub: totals[1].cost_display %}
+      {% render "oc_metric" with value: totals[2].sessions, label: "Last 30 days", sub: totals[2].cost_display %}
+      {% render "oc_metric" with value: totals[3].tokens_display, label: "All time tokens", sub: totals[3].cost_display %}
     </div>
-  {% endif %}
+  {%- else -%}
+    {% render "oc_notice" with title: no_data_title, body: no_data_body %}
+  {%- endif -%}
 </div>
 
-<div class="title_bar">
-  <span class="title">OpenCode Usage · {{ generated_at }}</span>
-</div>
-
-{% unless error %}
-  <script src="https://usetrmnl.com/js/highcharts/12.3.0/highcharts.js"></script>
-  <script>
-    const usageMonthlyLabels = [
-      {% for day in monthly %}"{{ day.label }}"{% unless forloop.last %},{% endunless %}{% endfor %}
-    ];
-    const usageCosts = [
-      {% for day in monthly %}{{ day.cost }}{% unless forloop.last %},{% endunless %}{% endfor %}
-    ];
-    const usageSessions = [
-      {% for day in monthly %}{{ day.sessions }}{% unless forloop.last %},{% endunless %}{% endfor %}
-    ];
-    const usageWeeklyLabels = [
-      {% for w in weekly %}"{{ w.label }}"{% unless forloop.last %},{% endunless %}{% endfor %}
-    ];
-    const usageWeeklyTokens = [
-      {% for w in weekly %}{{ w.tokens }}{% unless forloop.last %},{% endunless %}{% endfor %}
-    ];
-    const usageWeeklyCosts = [
-      {% for w in weekly %}{{ w.cost }}{% unless forloop.last %},{% endunless %}{% endfor %}
-    ];
-    const usageChart = Highcharts.chart('{{ chart_id }}', {
-      chart: { type: 'spline', backgroundColor: '#000000', animation: false, spacing: [8, 8, 4, 8], ['mar' + 'gin']: [8, 8, 34, 8] },
-      title: { text: null },
-      xAxis: { categories: usageWeeklyLabels, labels: { style: { color: '#A4A4A4' }, step: 1 }, lineColor: '#444444', tickColor: '#444444' },
-      yAxis: { title: { text: null }, labels: { style: { color: '#A4A4A4' } }, gridLineColor: '#333333', gridLineDashStyle: 'ShortDash', min: 0 },
-      plotOptions: { series: { animation: false, enableMouseTracking: false, marker: { enabled: true, radius: 2 }, lineWidth: 3 } },
-      series: [
-        { name: 'Tokens', data: usageWeeklyTokens, color: '#E1E1E1' },
-        { name: 'Cost', data: usageWeeklyCosts, color: '#7FD1FF' }
-      ],
-      tooltip: { enabled: false },
-      legend: { enabled: true, itemStyle: { color: '#A4A4A4' }, itemHoverStyle: { color: '#FFFFFF' } },
-      credits: { enabled: false }
-    });
-
-    function selectUsageMetric(metric) {
-      const weekly = metric === 'weekly';
-      const sessions = metric === 'sessions';
-      if (weekly) {
-        usageChart.update({
-          xAxis: { categories: usageWeeklyLabels, labels: { style: { color: '#A4A4A4' }, step: 1 }, lineColor: '#444444', tickColor: '#444444' },
-          yAxis: { title: { text: null }, labels: { style: { color: '#A4A4A4' } }, gridLineColor: '#333333', gridLineDashStyle: 'ShortDash', min: 0 },
-          plotOptions: { series: { animation: false, enableMouseTracking: false, marker: { enabled: true, radius: 2 }, lineWidth: 3 } },
-          series: [
-            { name: 'Tokens', data: usageWeeklyTokens, color: '#E1E1E1' },
-            { name: 'Cost', data: usageWeeklyCosts, color: '#7FD1FF' }
-          ],
-          legend: { enabled: true, itemStyle: { color: '#A4A4A4' }, itemHoverStyle: { color: '#FFFFFF' } }
-        }, true, true);
-        document.getElementById('usage-chart-heading').textContent = '12 WEEK TOKENS / COST';
-        document.getElementById('usage-chart-value').textContent = '{{ weekly_total_tokens_display }} tokens · {{ weekly_total_cost_display }}';
-      } else {
-        const values = sessions ? usageSessions : usageCosts;
-        const label = sessions ? '30 DAY SESSIONS' : '30 DAY COST';
-        const total = sessions ? '{{ totals[2].sessions }} sessions' : '{{ totals[2].cost_display }}';
-        usageChart.update({
-          xAxis: { categories: usageMonthlyLabels, labels: { style: { color: '#A4A4A4' }, step: 5 }, lineColor: '#444444', tickColor: '#444444' },
-          yAxis: { title: { text: null }, labels: { style: { color: '#A4A4A4' } }, gridLineColor: '#333333', gridLineDashStyle: 'ShortDash', min: 0 },
-          plotOptions: { series: { animation: false, enableMouseTracking: false, marker: { enabled: true, radius: 2 }, lineWidth: 3, color: '#E1E1E1' } },
-          series: [{ name: sessions ? 'Sessions' : 'Cost', data: values }],
-          legend: { enabled: false }
-        }, true, true);
-        document.getElementById('usage-chart-heading').textContent = label;
-        document.getElementById('usage-chart-value').textContent = total;
-      }
-      document.getElementById('usage-weekly-toggle').classList.toggle('label--inverted', weekly);
-      document.getElementById('usage-cost-toggle').classList.toggle('label--inverted', !weekly && !sessions);
-      document.getElementById('usage-sessions-toggle').classList.toggle('label--inverted', sessions);
-    }
-
-    document.getElementById('usage-weekly-toggle').addEventListener('click', function () { selectUsageMetric('weekly'); });
-    document.getElementById('usage-cost-toggle').addEventListener('click', function () { selectUsageMetric('cost'); });
-    document.getElementById('usage-sessions-toggle').addEventListener('click', function () { selectUsageMetric('sessions'); });
-    selectUsageMetric('weekly');
-  </script>
-{% endunless %}
+{% render "oc_title_bar" with trmnl: trmnl, stamp: generated_at, tz: timezone %}

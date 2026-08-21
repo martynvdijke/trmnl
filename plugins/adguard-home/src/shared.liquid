@@ -1,0 +1,127 @@
+<script src="https://trmnl.com/js/highcharts/12.3.0/highcharts.js"></script>
+{%- comment -%}
+  Shared data prep — trmnlp automatically prepends this file (src/shared.liquid)
+  to every view, so the variables and {% template %} partials below are
+  available in all layouts.
+
+  Source: src/transform.py GETs /control/stats and /control/top_blocked_domains
+  (HTTP Basic) and reshapes them into
+    queries / blocked / blocked_pct — period totals
+    queries_series / blocked_series — per-hour [{ts, y}] points, oldest first
+    top_blocked — top 3 blocked domains
+
+  Style follows the Umami Stats reference: dark gray canvas, white cards,
+  Highcharts splines drawn in the card's ink color.
+{%- endcomment -%}
+{%- assign has_data = false -%}
+{%- if queries != blank -%}{%- assign has_data = true -%}{%- endif -%}
+
+{%- assign no_data_title = 'Not connected' -%}
+{%- assign no_data_body = 'AdGuard Home returned no data. Check the url, username and password in this plugin&rsquo;s settings.' -%}
+
+{%- comment -%}
+  ag_metric — one white metric tile: big number + label + a secondary line.
+  Params: value (number|string|nil), label, sub (string|nil),
+  value_suffix (appended to the number, e.g. "%"), value_class (size classes,
+  default value--large), sub_class (extra classes on the sub line). Isolated
+  scope.
+{%- endcomment -%}
+{% template ag_metric %}
+<div class="item bg--white rounded--medium">
+  <div class="content w--full">
+    <div class="px--4 pt--4 w--full">
+      <span class="value value--tnums {{ value_class }}" data-fit-value="true">
+        {%- if value == blank -%}
+          —
+        {%- else -%}
+          {{- value -}}{{- value_suffix -}}
+        {%- endif -%}
+      </span>
+    </div>
+    <span class="label px--4">{{ label }}</span>
+    <span class="label px--4 pb--4 {{ sub_class }}">
+      {%- if sub == blank -%}
+        —
+      {%- else -%}
+        {{- sub -}}
+      {%- endif -%}
+    </span>
+  </div>
+</div>
+{% endtemplate %}
+
+{%- comment -%}
+  ag_chart — hourly splines with time x ticks: DNS Queries solid, Blocked
+  dotted. Both share one y axis (blocked is typically a fraction of queries,
+  so the scales agree). The chart fills its card, so each layout sizes it on
+  the wrapping .grid.
+  Params: q_points / b_points ([{ts, y}] arrays, epoch seconds).
+{%- endcomment -%}
+{% template ag_chart %}
+{% assign chart_id = 'ag-chart-' | append_random %}
+<div class="item bg--white rounded--medium py--4 px--1">
+  <div class="w--full h--full" id="{{ chart_id }}"></div>
+</div>
+<script type="text/javascript">
+  (function () {
+    var elId = "{{ chart_id }}";
+    var build = function () {
+      var el = document.getElementById(elId);
+      var px = function (v) { return TRMNLPaint.px(v, { el: elId }); };
+      var ink = getComputedStyle(el).color;
+      var font = px(16) + "px";
+      var labels = { style: { fontSize: font, color: ink } };
+      var series = [];
+      series.push({ name: "Queries", dashStyle: "Solid", data: [{% for p in q_points %}[{{ p.ts | append: '000' }}, {{ p.y }}],{% endfor %}] });
+      series.push({ name: "Blocked", dashStyle: "ShortDot", data: [{% for p in b_points %}[{{ p.ts | append: '000' }}, {{ p.y }}],{% endfor %}] });
+      return Highcharts.chart(elId, TRMNLCharts.merge(TRMNLCharts.options({ el: elId }), {
+        chart: { type: "spline", animation: false, height: null, spacing: [px(2), px(4), px(8), 0] },
+        legend: { enabled: true, align: "right", verticalAlign: "top", margin: px(4), padding: 0, symbolWidth: px(28), itemStyle: { fontSize: font, fontWeight: "400", color: ink } },
+        xAxis: {
+          type: "datetime", labels: labels, tickPixelInterval: px(110),
+          dateTimeLabelFormats: { hour: "%H:%M", day: "%H:%M" },
+          lineWidth: px(1), lineColor: ink, tickWidth: 0,
+          gridLineWidth: px(1), gridLineColor: ink, gridLineDashStyle: "Dot"
+        },
+        yAxis: { title: { text: null }, min: 0, allowDecimals: false, tickAmount: 4, labels: labels, gridLineWidth: px(1), gridLineColor: ink, gridLineDashStyle: "ShortDot" },
+        plotOptions: { spline: { color: ink, lineWidth: px(3) } },
+        series: series
+      }));
+    };
+    var tries = 0;
+    (function whenReady() {
+      if (window.Highcharts && window.TRMNLCharts) { TRMNLCharts.watch(elId, build); }
+      else if (tries++ < 100) { setTimeout(whenReady, 50); }
+    })();
+  })();
+</script>
+{% endtemplate %}
+
+{%- comment -%}
+  ag_notice — full-width message tile for the error / no-data states.
+  Params: title (string), body (string).
+{%- endcomment -%}
+{% template ag_notice %}
+<div class="grid">
+  <div class="item bg--white rounded--medium p--4">
+    <div class="content">
+      <span class="value value--large lg:value--xlarge">{{ title }}</span>
+      <span class="label">{{ body }}</span>
+    </div>
+  </div>
+</div>
+{% endtemplate %}
+
+{%- comment -%}
+  ag_title_bar — shared footer. Params: trmnl (namespace) and top_domain —
+  render scope is isolated, so values must be passed in explicitly.
+{%- endcomment -%}
+{% template ag_title_bar %}
+<div class="title_bar bg--white">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline>
+  </svg>
+  <span class="title">AdGuard Home</span>
+  <span class="instance">Past 24 hours{%- if top_domain != blank %} · top: {{ top_domain | truncate: 20 }}{% endif -%}</span>
+</div>
+{% endtemplate %}
