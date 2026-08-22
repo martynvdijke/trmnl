@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/martynvdijke/trmnl/compare/v1.4.0...v1.4.1) (2026-08-22)
+
+
+### Bug Fixes
+
+* reference timezone custom field in opencode-limits title bar ([f968165](https://github.com/martynvdijke/trmnl/commit/f9681651e0f7029914b41679406a8158e0d44d3d))
+
 # [1.4.0](https://github.com/martynvdijke/trmnl/compare/v1.3.1...v1.4.0) (2026-08-22)
 
 
