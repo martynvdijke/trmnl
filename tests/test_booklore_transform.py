@@ -3,8 +3,7 @@ import json
 import os
 import urllib.request
 from unittest import mock
-
-import pytest
+import unittest
 
 SPEC = importlib.util.spec_from_file_location(
     "booklore_transform",
@@ -48,40 +47,43 @@ def _input(**fields):
     return {"trmnl": {"plugin_settings": {"custom_fields_values": fields}}}
 
 
-def test_missing_url_returns_error():
-    out = transform.run(_input())
-    assert "error" in out
+class TransformTest(unittest.TestCase):
+    def test_missing_url_returns_error(self):
+        out = transform.run(_input())
+        self.assertIn("error", out)
+
+    def test_happy_path_counts_and_progress(self):
+        size = {"totalElements": 42, "content": []}
+        listing = {
+            "content": [
+                {"title": "Dune", "authors": [{"name": "Frank Herbert"}], "progress": 0.5},
+                {"title": "Hyperion", "authors": [{"name": "Dan Simmons"}], "progress": 80},
+            ]
+        }
+        fake = _fake({"size=1": size, "size=5": listing})
+        with mock.patch.object(urllib.request, "urlopen", fake):
+            out = transform.run(_input(url="https://booklore.local", api_key="tok"))
+        self.assertNotIn("error", out)
+        self.assertEqual(out["total_books"], 42)
+        self.assertEqual(out["reading_count"], 2)
+        self.assertEqual(out["reading"][0]["title"], "Dune")
+        self.assertEqual(out["reading"][0]["author"], "Frank Herbert")
+        self.assertEqual(out["reading"][0]["progress_pct"], 50)
+        self.assertEqual(out["reading"][1]["progress_pct"], 80)
+
+    def test_string_authors_and_zero_progress(self):
+        listing = {
+            "content": [
+                {"title": "The Name of the Wind", "authors": "Patrick Rothfuss", "progress": 0},
+            ]
+        }
+        fake = _fake({"size=1": {"totalElements": 7}, "size=5": listing})
+        with mock.patch.object(urllib.request, "urlopen", fake):
+            out = transform.run(_input(url="https://booklore.local", api_key="tok"))
+        self.assertEqual(out["total_books"], 7)
+        self.assertEqual(out["reading"][0]["author"], "Patrick Rothfuss")
+        self.assertEqual(out["reading"][0]["progress_pct"], 0)
 
 
-def test_happy_path_counts_and_progress():
-    size = {"totalElements": 42, "content": []}
-    listing = {
-        "content": [
-            {"title": "Dune", "authors": [{"name": "Frank Herbert"}], "progress": 0.5},
-            {"title": "Hyperion", "authors": [{"name": "Dan Simmons"}], "progress": 80},
-        ]
-    }
-    fake = _fake({"size=1": size, "size=5": listing})
-    with mock.patch.object(urllib.request, "urlopen", fake):
-        out = transform.run(_input(url="https://booklore.local", api_key="tok"))
-    assert "error" not in out
-    assert out["total_books"] == 42
-    assert out["reading_count"] == 2
-    assert out["reading"][0]["title"] == "Dune"
-    assert out["reading"][0]["author"] == "Frank Herbert"
-    assert out["reading"][0]["progress_pct"] == 50
-    assert out["reading"][1]["progress_pct"] == 80
-
-
-def test_string_authors_and_zero_progress():
-    listing = {
-        "content": [
-            {"title": "The Name of the Wind", "authors": "Patrick Rothfuss", "progress": 0},
-        ]
-    }
-    fake = _fake({"size=1": {"totalElements": 7}, "size=5": listing})
-    with mock.patch.object(urllib.request, "urlopen", fake):
-        out = transform.run(_input(url="https://booklore.local", api_key="tok"))
-    assert out["total_books"] == 7
-    assert out["reading"][0]["author"] == "Patrick Rothfuss"
-    assert out["reading"][0]["progress_pct"] == 0
+if __name__ == "__main__":
+    unittest.main()
