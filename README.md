@@ -23,7 +23,7 @@ Custom TRMNL plugins and the Immich photo proxy middleware, consolidated into a 
 | [scrutiny](plugins/scrutiny) | 450313 | Disk health and SMART status from Scrutiny |
 | [backrest](plugins/backrest) | 450314 | Last restic backup time and status from Backrest |
 | [audiobookshelf](plugins/audiobookshelf) | 450305 | Currently listening progress from Audiobookshelf |
-| [boardgamegeek](plugins/boardgamegeek) |  | Latest plays & a game you own |
+| [boardgamegeek](plugins/boardgamegeek) | 453396 | Latest plays & a game you own |
 | [forgejo](plugins/forgejo) | 450315 | Open PRs, issues, and CI status from Forgejo |
 | [nginx-proxy-manager](plugins/nginx-proxy-manager) | 450316 | TLS certificate expiry from Nginx Proxy Manager |
 | [freshrss](plugins/freshrss) | 450308 | Unread article count from FreshRSS |
