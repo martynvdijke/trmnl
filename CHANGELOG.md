@@ -1,3 +1,16 @@
+# [1.4.0](https://github.com/martynvdijke/trmnl/compare/v1.3.1...v1.4.0) (2026-08-22)
+
+
+### Bug Fixes
+
+* drop pytest dependency from booklore transform test ([1360051](https://github.com/martynvdijke/trmnl/commit/1360051230f5bc69d621db32cd94e70d763ac2af))
+
+
+### Features
+
+* add compact mono and color plugin icons ([873893b](https://github.com/martynvdijke/trmnl/commit/873893baab05c86ff82b130d0866ebeb627afc00))
+* add Home Assistant, Paperless-ngx, and changedetection plugins ([2bd10f9](https://github.com/martynvdijke/trmnl/commit/2bd10f9d29d6b93067a7d487be7dd52b46154e85))
+
 ## [1.3.1](https://github.com/martynvdijke/trmnl/compare/v1.3.0...v1.3.1) (2026-08-20)
 
 
