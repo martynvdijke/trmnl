@@ -1,0 +1,61 @@
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+framework_version: latest
+serverless_language: python
+polling_url: "{{url}}/api/states"
+polling_headers: 'Authorization=Bearer {{token}}'
+polling_body: ''
+oauth_enabled: 'false'
+oauth_pkce_enabled: 'no'
+oauth_authorize_url: ''
+oauth_token_url: ''
+oauth_scopes: ''
+oauth_scope_separator: ''
+oauth_refresh_url: ''
+oauth_auth_params: ''
+oauth_token_headers: ''
+oauth_token_site: ''
+oauth_token_params: ''
+oauth_token_request_auth_method: ''
+oauth_body_format: ''
+oauth_token_response_metadata: ''
+oauth_authorization_method: ''
+oauth_refresh_params: ''
+oauth_token_field_name: ''
+oauth_expiry_field_name: ''
+oauth_expiry_strategy: ''
+oauth_fixed_expiry_ms: ''
+custom_fields:
+- keyname: url
+  name: Address of the Home Assistant server
+  field_type: url
+  description: The base URL of your Home Assistant instance
+  placeholder: https://ha.example.com
+  help_text: Please include the protocol (e.g. http or https)
+- keyname: token
+  name: Long-Lived Access Token
+  field_type: text
+  description: Home Assistant long-lived access token
+  placeholder: eyJhbGciOi...
+  help_text: "Create in Home Assistant: Profile > Security > Long-Lived Access Tokens"
+- keyname: entities
+  name: Entity IDs (optional)
+  field_type: text
+  description: Comma-separated entity IDs to display
+  placeholder: light.living_room,sensor.temperature
+  help_text: Leave empty to show a domain summary instead
+- keyname: bio
+  name: About This Plugin
+  category: entertainment
+  field_type: author_bio
+  description: Shows Home Assistant entity states and domain summary on your TRMNL display.
+  github_url: https://github.com/martynvdijke/trmnl
+  learn_more_url: https://github.com/martynvdijke/trmnl
+  email_address: martyn@vandijke.xyz
+name: Home Assistant
+description: Home Assistant entity summary
+refresh_interval: 360

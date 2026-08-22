@@ -1,0 +1,45 @@
+{% comment %}TRMNL fields: {{ url }} {{ api_key }}{% endcomment %}
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--medium">{{ error }}</span>
+    </div>
+  {% else %}
+    <div class="item">
+      <div class="flex flex--row flex--between w--full">
+        <div class="flex flex--col">
+          <span class="value value--large">{{ total }}</span>
+          <span class="label">total</span>
+        </div>
+        <div class="flex flex--col">
+          <span class="value value--large">{{ unviewed }}</span>
+          <span class="label">unviewed</span>
+        </div>
+        <div class="flex flex--col">
+          <span class="value value--large">{{ errored }}</span>
+          <span class="label">errored</span>
+        </div>
+        <div class="flex flex--col">
+          <span class="value value--large">{{ paused }}</span>
+          <span class="label">paused</span>
+        </div>
+      </div>
+    </div>
+    {% if recent.size > 0 %}
+      <div class="hr"></div>
+      <div class="item">
+        <span class="label label--small">Recent changes</span>
+        {% for w in recent %}
+          <div class="flex flex--row flex--between w--full">
+            <span class="value value--small">{{ w.title }}</span>
+            <span class="label">{{ w.last_changed }}</span>
+          </div>
+          {% unless forloop.last %}<div class="hr"></div>{% endunless %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Changedetection</span>
+  </div>
+</div>

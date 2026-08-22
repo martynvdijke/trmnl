@@ -1,0 +1,37 @@
+{% comment %}TRMNL fields: {{ url }} {{ api_token }}{% endcomment %}
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--medium">{{ error }}</span>
+    </div>
+  {% else %}
+    <div class="item">
+      <div class="flex flex--row flex--between w--full">
+        <div class="flex flex--col">
+          <span class="value value--large">{{ inbox_count }}</span>
+          <span class="label">Inbox</span>
+        </div>
+        <div class="flex flex--col">
+          <span class="value value--large">{{ total_documents }}</span>
+          <span class="label">Total</span>
+        </div>
+      </div>
+    </div>
+    {% if recent.size > 0 %}
+      <div class="hr"></div>
+      <div class="item">
+        <span class="label label--small">Recent</span>
+        {% for doc in recent %}
+          <div class="flex flex--row flex--between w--full">
+            <span class="value value--small">{{ doc.title }}</span>
+            <span class="label">{{ doc.created }}</span>
+          </div>
+          {% unless forloop.last %}<div class="hr"></div>{% endunless %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Paperless-ngx</span>
+  </div>
+</div>

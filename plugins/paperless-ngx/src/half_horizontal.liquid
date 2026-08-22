@@ -1,0 +1,26 @@
+{% comment %}TRMNL fields: {{ url }} {{ api_token }}{% endcomment %}
+<div class="layout layout--row layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--medium">{{ error }}</span>
+    </div>
+  {% else %}
+    <div class="item">
+      <span class="value value--large">{{ inbox_count }}</span>
+      <span class="label">Inbox</span>
+    </div>
+    <div class="item">
+      <span class="value value--medium">{{ total_documents }}</span>
+      <span class="label">Total</span>
+    </div>
+    {% if recent.size > 0 %}
+      <div class="item">
+        <span class="value value--small">{{ recent[0].title }}</span>
+        <span class="label">{{ recent[0].created }}</span>
+      </div>
+    {% endif %}
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Paperless-ngx</span>
+  </div>
+</div>

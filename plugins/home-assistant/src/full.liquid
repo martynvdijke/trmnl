@@ -1,0 +1,70 @@
+{% comment %}TRMNL fields: {{ url }} {{ token }} {{ entities }}{% endcomment %}
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--medium">{{ error }}</span>
+    </div>
+  {% else %}
+    {% if mode == "entities" %}
+      <div class="item">
+        <span class="label label--small">Entities</span>
+        {% for item in items %}
+          <div class="flex flex--row flex--between w--full">
+            <span class="value value--small">{{ item.name }}</span>
+            <span class="label">{{ item.state }}{{ item.unit }}</span>
+          </div>
+          {% unless forloop.last %}<div class="hr"></div>{% endunless %}
+        {% endfor %}
+        {% if items.size == 0 %}
+          <span class="label">No matching entities</span>
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="item">
+        <div class="flex flex--row flex--between w--full">
+          <div class="flex flex--col">
+            <span class="value value--large">{{ total }}</span>
+            <span class="label">entities</span>
+          </div>
+          <div class="flex flex--col">
+            <span class="value value--large">{{ lights_on }}</span>
+            <span class="label">lights on</span>
+          </div>
+        </div>
+      </div>
+      <div class="hr"></div>
+      <div class="item">
+        <span class="label label--small">By domain</span>
+        <div class="flex flex--row flex--between w--full">
+          <div class="flex flex--col">
+            <span class="value value--small">{{ counts.light }}</span>
+            <span class="label">light</span>
+          </div>
+          <div class="flex flex--col">
+            <span class="value value--small">{{ counts.switch }}</span>
+            <span class="label">switch</span>
+          </div>
+          <div class="flex flex--col">
+            <span class="value value--small">{{ counts.sensor }}</span>
+            <span class="label">sensor</span>
+          </div>
+          <div class="flex flex--col">
+            <span class="value value--small">{{ counts.binary_sensor }}</span>
+            <span class="label">binary_sensor</span>
+          </div>
+          <div class="flex flex--col">
+            <span class="value value--small">{{ counts.climate }}</span>
+            <span class="label">climate</span>
+          </div>
+          <div class="flex flex--col">
+            <span class="value value--small">{{ counts.media_player }}</span>
+            <span class="label">media_player</span>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Home Assistant{% if mode == "entities" %} · Entities{% endif %}</span>
+  </div>
+</div>

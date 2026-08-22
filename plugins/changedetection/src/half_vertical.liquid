@@ -1,0 +1,26 @@
+{% comment %}TRMNL fields: {{ url }} {{ api_key }}{% endcomment %}
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--medium">{{ error }}</span>
+    </div>
+  {% else %}
+    <div class="item">
+      <span class="value value--large">{{ unviewed }}</span>
+      <span class="label">unviewed</span>
+    </div>
+    <div class="item">
+      <span class="value value--medium">{{ total }}</span>
+      <span class="label">total · {{ errored }} errored</span>
+    </div>
+    {% if recent.size > 0 %}
+      <div class="item">
+        <span class="value value--small">{{ recent[0].title }}</span>
+        <span class="label">recent</span>
+      </div>
+    {% endif %}
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Changedetection</span>
+  </div>
+</div>

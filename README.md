@@ -29,6 +29,9 @@ Custom TRMNL plugins and the Immich photo proxy middleware, consolidated into a 
 | [freshrss](plugins/freshrss) | 450308 | Unread article count from FreshRSS |
 | [wallabag](plugins/wallabag) | 450309 | Unread article count from Wallabag |
 | [booklore](plugins/booklore) | 450310 | Reading progress and library size from Booklore |
+| [home-assistant](plugins/home-assistant) |  | Home Assistant entity summary |
+| [paperless-ngx](plugins/paperless-ngx) |  | Paperless inbox and library |
+| [changedetection](plugins/changedetection) |  | Website change monitoring |
 
 Each plugin lives in `plugins/<name>/` with its own `.trmnlp.yml` and `src/`
 (`settings.yml`, `transform.py`, and one `.liquid` view per display size).

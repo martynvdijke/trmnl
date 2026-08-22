@@ -1,0 +1,38 @@
+{% comment %}TRMNL fields: {{ url }} {{ token }} {{ entities }}{% endcomment %}
+<div class="layout layout--col layout--stretch gap">
+  {% if error %}
+    <div class="item">
+      <span class="value value--medium">{{ error }}</span>
+    </div>
+  {% else %}
+    {% if mode == "entities" %}
+      <div class="item">
+        {% for item in items %}
+          <div class="flex flex--row flex--between w--full">
+            <span class="value value--small">{{ item.name }}</span>
+            <span class="label">{{ item.state }}{{ item.unit }}</span>
+          </div>
+          {% unless forloop.last %}<div class="hr"></div>{% endunless %}
+        {% endfor %}
+        {% if items.size == 0 %}
+          <span class="label">No matching entities</span>
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="item">
+        <span class="value value--large">{{ total }}</span>
+        <span class="label">entities</span>
+      </div>
+      <div class="item">
+        <span class="value value--medium">{{ lights_on }}</span>
+        <span class="label">lights on · {{ counts.light }} lights</span>
+      </div>
+      <div class="item">
+        <span class="label">{{ counts.sensor }} sensor · {{ counts.switch }} switch · {{ counts.climate }} climate</span>
+      </div>
+    {% endif %}
+  {% endif %}
+  <div class="title_bar">
+    <span class="title">Home Assistant</span>
+  </div>
+</div>
