@@ -61,7 +61,8 @@
 
 {%- comment -%}
   lm_title_bar — shared footer. Params: trmnl (namespace), all_ok_flag, stamp,
-  tightest (label of the most-consumed limit) and resets_in — render scope is
+  tightest (label of the most-consumed limit), resets_in and tz (IANA timezone
+  name from the timezone custom field) — render scope is
   isolated, so values must be passed in explicitly.
 {%- endcomment -%}
 {% template lm_title_bar %}
@@ -70,6 +71,6 @@
     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line>
   </svg>
   <span class="title">OpenCode Limits</span>
-  <span class="instance">{%- if all_ok_flag %}All OK · {{ stamp }}{% elsif resets_in != blank %}{{ tightest }} resets in {{ resets_in }}{% else %}{{ stamp }}{% endif -%}</span>
+  <span class="instance">{%- if all_ok_flag %}All OK · {{ stamp }}{% elsif resets_in != blank %}{{ tightest }} resets in {{ resets_in }}{% else %}{{ stamp }}{% endif -%}{%- if tz != blank %} · {{ tz }}{%- endif -%}</span>
 </div>
 {% endtemplate %}
