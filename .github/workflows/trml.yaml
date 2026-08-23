@@ -32,6 +32,7 @@ jobs:
       - run: gem install trmnl_preview
       - name: Bootstrap or require TRMNL plugin IDs
         run: |
+          created_any=0
           for dir in plugins/*/; do
             file="$dir/src/settings.yml"
             plugin_id=$(ruby -e 'require "yaml"; puts YAML.load_file(ARGV[0])["id"].to_s.strip' "$file")
@@ -45,11 +46,16 @@ jobs:
             new_id=$(printf '%s\n' "$output" | grep -oE '/plugin_settings/[0-9]+/edit' | grep -oE '[0-9]+' | tail -1)
             if [ -n "$new_id" ]; then
               echo "::error::$file: Created TRMNL plugin with ID $new_id. Add 'id: $new_id' to $file and commit it so future pushes update this plugin instead of creating new ones."
+              created_any=1
+            else
+              echo "::error::$file: Could not extract the created plugin ID from the push output. Check the TRMNL dashboard for the new plugin and set its ID in $file."
               exit 1
             fi
-            echo "::error::$file: Could not extract the created plugin ID from the push output. Check the TRMNL dashboard for the new plugin and set its ID in $file."
-            exit 1
           done
+          if [ "$created_any" -eq 1 ]; then
+            echo "::error::One or more new TRMNL plugins were created above. Pin their IDs in settings.yml and commit before pushing updates."
+            exit 1
+          fi
         env:
           TRMNL_API_KEY: ${{ secrets.TRML_TOKEN }}
       - name: Push TRMNL plugins
