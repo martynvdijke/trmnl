@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/martynvdijke/trmnl/compare/v1.4.1...v1.4.2) (2026-08-23)
+
+
+### Bug Fixes
+
+* bootstrap all ID-less TRMNL plugins in a single CI run ([f491889](https://github.com/martynvdijke/trmnl/commit/f49188970bc8dbbead1e9e7551c2ee991bf48a6f))
+
 ## [1.4.1](https://github.com/martynvdijke/trmnl/compare/v1.4.0...v1.4.1) (2026-08-22)
 
 
