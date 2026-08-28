@@ -1,3 +1,12 @@
+## [1.4.3](https://github.com/martynvdijke/trmnl/compare/v1.4.2...v1.4.3) (2026-08-28)
+
+
+### Bug Fixes
+
+* **ci:** make pinact check non-blocking ([7274023](https://github.com/martynvdijke/trmnl/commit/72740231008316b7b1f6e25211b8ded83229b030))
+* **ci:** remove unsupported --diff flag from pinact ([bfe61e7](https://github.com/martynvdijke/trmnl/commit/bfe61e7df9317047091cad4b08e81047b6bba73b))
+* **ci:** update actionlint to v1.7.12 (v1 tag removed upstream) ([44c5936](https://github.com/martynvdijke/trmnl/commit/44c593669273893278ee9d1fd12d8a9bd736c796))
+
 ## [1.4.2](https://github.com/martynvdijke/trmnl/compare/v1.4.1...v1.4.2) (2026-08-23)
 
 
