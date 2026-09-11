@@ -1,6 +1,7 @@
 import importlib.util
 import json
 import os
+import unittest
 from unittest import mock
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -44,49 +45,52 @@ def _fake_urlopen(token_payload, entries_payload):
     return fake
 
 
-def test_missing_url():
-    out = mod.run({"trmnl": {"plugin_settings": {"custom_fields_values": {}}}})
-    assert "error" in out
-    assert "URL" in out["error"]
+class TransformTest(unittest.TestCase):
+    def test_missing_url(self):
+        out = mod.run({"trmnl": {"plugin_settings": {"custom_fields_values": {}}}})
+        self.assertIn("error", out)
+        self.assertIn("URL", out["error"])
 
-
-def test_unread_count():
-    inp = {
-        "trmnl": {
-            "plugin_settings": {
-                "custom_fields_values": {
-                    "url": "https://wb.example.com",
-                    "client_id": "cid",
-                    "client_secret": "csec",
-                    "username": "user",
-                    "password": "pw",
-                }
-            }
-        }
-    }
-    with mock.patch(
-        "urllib.request.urlopen",
-        _fake_urlopen({"access_token": "tok"}, {"total": 42, "_embedded": {"items": []}}),
-    ):
-        out = mod.run(inp)
-    assert out["unread"] == 42
-
-
-def test_auth_failure():
-    with mock.patch("urllib.request.urlopen", lambda *a, **k: _Resp({})):
-        out = mod.run(
-            {
-                "trmnl": {
-                    "plugin_settings": {
-                        "custom_fields_values": {
-                            "url": "https://wb.example.com",
-                            "client_id": "c",
-                            "client_secret": "s",
-                            "username": "u",
-                            "password": "p",
-                        }
+    def test_unread_count(self):
+        inp = {
+            "trmnl": {
+                "plugin_settings": {
+                    "custom_fields_values": {
+                        "url": "https://wb.example.com",
+                        "client_id": "cid",
+                        "client_secret": "csec",
+                        "username": "user",
+                        "password": "pw",
                     }
                 }
             }
-        )
-    assert "error" in out
+        }
+        with mock.patch(
+            "urllib.request.urlopen",
+            _fake_urlopen({"access_token": "tok"}, {"total": 42, "_embedded": {"items": []}}),
+        ):
+            out = mod.run(inp)
+        self.assertEqual(out["unread"], 42)
+
+    def test_auth_failure(self):
+        with mock.patch("urllib.request.urlopen", lambda *a, **k: _Resp({})):
+            out = mod.run(
+                {
+                    "trmnl": {
+                        "plugin_settings": {
+                            "custom_fields_values": {
+                                "url": "https://wb.example.com",
+                                "client_id": "c",
+                                "client_secret": "s",
+                                "username": "u",
+                                "password": "p",
+                            }
+                        }
+                    }
+                }
+            )
+        self.assertIn("error", out)
+
+
+if __name__ == "__main__":
+    unittest.main()

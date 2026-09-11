@@ -117,7 +117,9 @@ def run(input_data):
 
     idx = _day_index() % len(items)
     recipe = items[idx]
-    detail = _fetch_detail(url, api_key, recipe.get("slug", "")) if api_key else None
+    detail = (
+        _fetch_detail(url.rstrip("/"), api_key, recipe.get("slug", "")) if api_key else None
+    )
     return _summary_card(recipe, url, detail)
 
 

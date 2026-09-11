@@ -73,11 +73,15 @@ def run(input):
     except json.JSONDecodeError:
         return {"error": "invalid response from FreshRSS"}
 
-    counts = data.get("unreadcounts", [])
-    unread = sum(int(c.get("count", 0)) for c in counts)
+    counts = data.get("unreadcounts", []) if isinstance(data, dict) else []
+    unread = sum(int(c.get("count", 0)) for c in counts if isinstance(c, dict))
     return {"unread": unread, "feeds": len(counts)}
 
 
 if __name__ == "__main__":
-    payload = json.load(sys.stdin)
+    raw = sys.stdin.read()
+    try:
+        payload = json.loads(raw) if raw.strip() else {}
+    except json.JSONDecodeError:
+        payload = {}
     print(json.dumps(run(payload)))

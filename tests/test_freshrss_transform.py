@@ -1,6 +1,7 @@
 import importlib.util
 import json
 import os
+import unittest
 from unittest import mock
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -44,49 +45,52 @@ def _fake_urlopen(login_text, unread_payload):
     return fake
 
 
-def test_missing_url():
-    out = mod.run({"trmnl": {"plugin_settings": {"custom_fields_values": {}}}})
-    assert "error" in out
-    assert "URL" in out["error"]
+class TransformTest(unittest.TestCase):
+    def test_missing_url(self):
+        out = mod.run({"trmnl": {"plugin_settings": {"custom_fields_values": {}}}})
+        self.assertIn("error", out)
+        self.assertIn("URL", out["error"])
 
-
-def test_unread_count():
-    inp = {
-        "trmnl": {
-            "plugin_settings": {
-                "custom_fields_values": {
-                    "url": "https://fr.example.com",
-                    "username": "user@example.com",
-                    "password": "pw",
-                }
-            }
-        }
-    }
-    with mock.patch(
-        "urllib.request.urlopen",
-        _fake_urlopen(
-            "SID=abc\nAuth=def\n",
-            {"unreadcounts": [{"count": 5}, {"count": 3}]},
-        ),
-    ):
-        out = mod.run(inp)
-    assert out["unread"] == 8
-    assert out["feeds"] == 2
-
-
-def test_login_failure():
-    with mock.patch("urllib.request.urlopen", lambda *a, **k: _Resp("")):
-        out = mod.run(
-            {
-                "trmnl": {
-                    "plugin_settings": {
-                        "custom_fields_values": {
-                            "url": "https://fr.example.com",
-                            "username": "u",
-                            "password": "p",
-                        }
+    def test_unread_count(self):
+        inp = {
+            "trmnl": {
+                "plugin_settings": {
+                    "custom_fields_values": {
+                        "url": "https://fr.example.com",
+                        "username": "user@example.com",
+                        "password": "pw",
                     }
                 }
             }
-        )
-    assert "error" in out
+        }
+        with mock.patch(
+            "urllib.request.urlopen",
+            _fake_urlopen(
+                "SID=abc\nAuth=def\n",
+                {"unreadcounts": [{"count": 5}, {"count": 3}]},
+            ),
+        ):
+            out = mod.run(inp)
+        self.assertEqual(out["unread"], 8)
+        self.assertEqual(out["feeds"], 2)
+
+    def test_login_failure(self):
+        with mock.patch("urllib.request.urlopen", lambda *a, **k: _Resp("")):
+            out = mod.run(
+                {
+                    "trmnl": {
+                        "plugin_settings": {
+                            "custom_fields_values": {
+                                "url": "https://fr.example.com",
+                                "username": "u",
+                                "password": "p",
+                            }
+                        }
+                    }
+                }
+            )
+        self.assertIn("error", out)
+
+
+if __name__ == "__main__":
+    unittest.main()

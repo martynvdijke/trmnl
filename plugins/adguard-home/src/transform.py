@@ -122,7 +122,7 @@ def run(input):
         + _num(stats.get("num_replaced_parental"))
         + _num(stats.get("num_replaced_safesearch"))
     )
-    queries = _num(stats.get("num_queries"))
+    queries = _num(stats.get("num_dns_queries"))
     blocked_pct = round(blocked / queries * 100) if queries else 0
 
     top_blocked = [_normalize_blocked(e) for e in top_raw[:3]]

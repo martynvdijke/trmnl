@@ -1,6 +1,7 @@
 import importlib.util
 import json
 import os
+import unittest
 from unittest import mock
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -42,55 +43,58 @@ def _fake_urlopen(login_payload, certs_payload):
     return fake
 
 
-def test_missing_url():
-    out = mod.run({"trmnl": {"plugin_settings": {"custom_fields_values": {}}}})
-    assert "error" in out
-    assert "URL" in out["error"]
+class TransformTest(unittest.TestCase):
+    def test_missing_url(self):
+        out = mod.run({"trmnl": {"plugin_settings": {"custom_fields_values": {}}}})
+        self.assertIn("error", out)
+        self.assertIn("URL", out["error"])
 
-
-def test_certs_and_expiry():
-    inp = {
-        "trmnl": {
-            "plugin_settings": {
-                "custom_fields_values": {
-                    "url": "https://npm.example.com",
-                    "username": "admin@example.com",
-                    "password": "pw",
-                }
-            }
-        }
-    }
-    certs = [
-        {"domain_names": ["far.example.com"], "expiresOn": "2099-01-01T00:00:00.000Z"},
-        {"domain_names": ["soon.example.com"], "expiresOn": "2026-08-25T00:00:00.000Z"},
-    ]
-    with mock.patch(
-        "urllib.request.urlopen",
-        _fake_urlopen({"token": "abc"}, certs),
-    ):
-        out = mod.run(inp)
-    assert out["count"] == 2
-    assert out["expiring_soon_count"] == 1
-    # sorted soonest first
-    assert out["certs"][0]["domain"] == "soon.example.com"
-    assert isinstance(out["certs"][0]["days_left"], int)
-    assert out["certs"][0]["days_left"] <= 30
-    assert isinstance(out["certs"][1]["days_left"], int)
-
-
-def test_login_failure():
-    with mock.patch("urllib.request.urlopen", lambda *a, **k: _Resp({})):
-        out = mod.run(
-            {
-                "trmnl": {
-                    "plugin_settings": {
-                        "custom_fields_values": {
-                            "url": "https://npm.example.com",
-                            "username": "a",
-                            "password": "b",
-                        }
+    def test_certs_and_expiry(self):
+        inp = {
+            "trmnl": {
+                "plugin_settings": {
+                    "custom_fields_values": {
+                        "url": "https://npm.example.com",
+                        "username": "admin@example.com",
+                        "password": "pw",
                     }
                 }
             }
-        )
-    assert "error" in out
+        }
+        certs = [
+            {"domain_names": ["far.example.com"], "expiresOn": "2099-01-01T00:00:00.000Z"},
+            {"domain_names": ["soon.example.com"], "expiresOn": "2026-08-25T00:00:00.000Z"},
+        ]
+        with mock.patch(
+            "urllib.request.urlopen",
+            _fake_urlopen({"token": "abc"}, certs),
+        ):
+            out = mod.run(inp)
+        self.assertEqual(out["count"], 2)
+        self.assertEqual(out["expiring_soon_count"], 1)
+        # sorted soonest first
+        self.assertEqual(out["certs"][0]["domain"], "soon.example.com")
+        self.assertIsInstance(out["certs"][0]["days_left"], int)
+        self.assertLessEqual(out["certs"][0]["days_left"], 30)
+        self.assertIsInstance(out["certs"][1]["days_left"], int)
+
+    def test_login_failure(self):
+        with mock.patch("urllib.request.urlopen", lambda *a, **k: _Resp({})):
+            out = mod.run(
+                {
+                    "trmnl": {
+                        "plugin_settings": {
+                            "custom_fields_values": {
+                                "url": "https://npm.example.com",
+                                "username": "a",
+                                "password": "b",
+                            }
+                        }
+                    }
+                }
+            )
+        self.assertIn("error", out)
+
+
+if __name__ == "__main__":
+    unittest.main()

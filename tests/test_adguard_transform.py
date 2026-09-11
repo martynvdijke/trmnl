@@ -32,7 +32,7 @@ class _Resp:
 def _fake_urlopen(req, timeout=None):
     url = req.full_url if hasattr(req, "full_url") else str(req)
     if url.endswith("/control/stats"):
-        return _Resp({"num_queries": 10000, "num_blocked_filtering": 1500})
+        return _Resp({"num_dns_queries": 10000, "num_blocked_filtering": 1500})
     if url.endswith("/control/top_blocked_domains"):
         return _Resp([
             ["ads.example.com", 500],

@@ -35,7 +35,7 @@ custom_fields:
   field_type: url
   name: Address of the OpenCode server
   description: URL
-  placeholder: https://opencode.vandijke.xyz
+  placeholder: https://opencode.example.com
   help_text: Please include the protocol (e.g. http or https)
 - keyname: api_key
   field_type: text

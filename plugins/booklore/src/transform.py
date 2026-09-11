@@ -54,7 +54,10 @@ def run(input):
     except RuntimeError as e:
         return {"error": str(e)}
 
-    total_books = int(size_resp.get("totalElements", size_resp.get("total", 0)))
+    try:
+        total_books = int(size_resp.get("totalElements", size_resp.get("total", 0)) or 0)
+    except (TypeError, ValueError):
+        total_books = 0
 
     content = list_resp.get("content", list_resp.get("data", []))
     reading = []
@@ -85,5 +88,9 @@ def run(input):
 
 
 if __name__ == "__main__":
-    payload = json.load(sys.stdin)
+    raw = sys.stdin.read()
+    try:
+        payload = json.loads(raw) if raw.strip() else {}
+    except json.JSONDecodeError:
+        payload = {}
     print(json.dumps(run(payload)))

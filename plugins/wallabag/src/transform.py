@@ -73,10 +73,14 @@ def run(input):
     except RuntimeError as e:
         return {"error": str(e)}
 
-    unread = int(entries.get("total", 0))
+    unread = int(entries.get("total", 0)) if isinstance(entries, dict) else 0
     return {"unread": unread}
 
 
 if __name__ == "__main__":
-    payload = json.load(sys.stdin)
+    raw = sys.stdin.read()
+    try:
+        payload = json.loads(raw) if raw.strip() else {}
+    except json.JSONDecodeError:
+        payload = {}
     print(json.dumps(run(payload)))
