@@ -1,3 +1,10 @@
+## [1.4.4](https://github.com/martynvdijke/trmnl/compare/v1.4.3...v1.4.4) (2026-09-11)
+
+
+### Bug Fixes
+
+* correct data keys, empty-stdin crashes, and untested transforms ([578f56a](https://github.com/martynvdijke/trmnl/commit/578f56a8af33af7db6e1bddca0736e4c1e0feeb6))
+
 ## [1.4.3](https://github.com/martynvdijke/trmnl/compare/v1.4.2...v1.4.3) (2026-08-28)
 
 
