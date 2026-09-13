@@ -31,20 +31,23 @@ class _Resp:
 
 def _fake_urlopen(req, timeout=None):
     url = req.full_url if hasattr(req, "full_url") else str(req)
-    if "type=pr" in url:
+    if "/user/issues" in url:
         return _Resp([
-            {"title": "Fix bug", "repository": {"full_name": "me/app"}},
-            {"title": "Add feature", "repository": {"full_name": "me/lib"}},
+            {"title": "Fix bug", "pull_request": {"html_url": "x"},
+             "repository": {"full_name": "me/app"}},
+            {"title": "Add feature", "pull_request": {"html_url": "x"},
+             "repository": {"full_name": "me/lib"}},
+            {"title": "Docs"},
+            {"title": "Typo"},
+            {"title": "Enhance"},
         ])
-    if "type=issues" in url:
-        return _Resp([{"title": "Docs"}, {"title": "Typo"}, {"title": "Enhance"}])
     if "/user/repos" in url:
         return _Resp([{"full_name": "me/app"}])
     if "/actions/runs" in url:
-        return _Resp([
+        return _Resp({"workflow_runs": [
             {"status": "running", "conclusion": ""},
             {"status": "success", "conclusion": "success"},
-        ])
+        ]})
     return _Resp({})
 
 
@@ -72,11 +75,12 @@ class TransformTest(unittest.TestCase):
         self.assertEqual(out["ci_running"], 1)
         self.assertEqual(out["last_ci"], "success")
         self.assertEqual(len(out["prs"]), 2)
+        self.assertEqual(out["prs"][0]["repo"], "me/app")
 
     @patch("urllib.request.urlopen", _fake_urlopen)
     def test_unreachable(self, *_):
         def side(req, timeout=None):
-            if "type=pr" in (req.full_url if hasattr(req, "full_url") else str(req)):
+            if "/user/issues" in (req.full_url if hasattr(req, "full_url") else str(req)):
                 raise OSError("no")
             return _fake_urlopen(req, timeout)
         with patch("urllib.request.urlopen", side_effect=side):

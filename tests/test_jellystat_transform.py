@@ -31,12 +31,17 @@ class _Resp:
 
 def _fake_urlopen(req, timeout=None):
     url = req.full_url if hasattr(req, "full_url") else str(req)
-    if "auth/login" in url or "/api/login" in url:
+    if "auth/login" in url:
         return _Resp({"token": "t"})
-    if "/api/summary" in url:
-        return _Resp({"total_hours": 120, "total_plays": 300, "total_users": 2})
-    if "/api/items/watched" in url:
-        return _Resp([{"name": "The Expanse", "plays": 40, "hours": 30}])
+    if "getViewsOverTime" in url:
+        return _Resp({
+            "libraries": [],
+            "stats": [{"Key": "Sep 01", "Movies": {"count": 300, "duration": 7200}}],
+        })
+    if "getAllUserActivity" in url:
+        return _Resp([{"UserName": "a"}, {"UserName": "b"}, {"UserName": "a"}])
+    if "getMostViewedByType" in url:
+        return _Resp([{"Plays": 40, "total_playback_duration": 108000, "Name": "The Expanse"}])
     return _Resp({})
 
 
@@ -61,30 +66,35 @@ class TransformTest(unittest.TestCase):
         self.assertIn("error", out)
 
     @patch("urllib.request.urlopen", _fake_urlopen)
-    def test_summary_reshaped(self, *_):
+    def test_stats_reshaped(self, *_):
         out = transform.run(_input())
-        self.assertEqual(out["hours"], 120)
+        self.assertEqual(out["hours"], 120)  # 7200 minutes of playback
         self.assertEqual(out["plays"], 300)
         self.assertEqual(out["users"], 2)
         self.assertEqual(len(out["top_shows"]), 1)
+        self.assertEqual(out["top_shows"][0]["name"], "The Expanse")
+        self.assertEqual(out["top_shows"][0]["plays"], 40)
+        self.assertEqual(out["top_shows"][0]["hours"], 30)  # 108000 seconds
         self.assertEqual(out["top_show"]["name"], "The Expanse")
 
     @patch("urllib.request.urlopen", _fake_urlopen)
-    def test_login_fallback(self, *_):
-        # First login endpoint fails, /api/login fallback succeeds.
-        calls = {"n": 0}
-
+    def test_login_failure(self, *_):
         def side(req, timeout=None):
             url = req.full_url if hasattr(req, "full_url") else str(req)
-            if url.endswith("/api/auth/login"):
-                calls["n"] += 1
-                raise OSError("no")
+            if "auth/login" in url:
+                return _Resp({})  # no token
             return _fake_urlopen(req, timeout)
-
         with patch("urllib.request.urlopen", side_effect=side):
             out = transform.run(_input())
-        self.assertEqual(out["hours"], 120)
-        self.assertEqual(calls["n"], 1)
+        self.assertIn("error", out)
+
+    @patch("urllib.request.urlopen", _fake_urlopen)
+    def test_unreachable(self, *_):
+        def side(req, timeout=None):
+            raise OSError("no")
+        with patch("urllib.request.urlopen", side_effect=side):
+            out = transform.run(_input())
+        self.assertIn("error", out)
 
 
 if __name__ == "__main__":

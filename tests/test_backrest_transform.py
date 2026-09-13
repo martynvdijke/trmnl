@@ -31,18 +31,15 @@ class _Resp:
 
 def _fake_urlopen(req, timeout=None):
     url = req.full_url if hasattr(req, "full_url") else str(req)
-    if "/api/v1/plans" in url:
-        return _Resp([
-            {"id": "plan-main", "config": {"repo": "restic-repo"}},
-            {"id": "plan-media", "config": {"repo": "media-repo"}},
-        ])
-    if "/api/v1/operations" in url:
-        return _Resp([
-            {"id": "op1", "type": "backup", "plan_id": "plan-main",
-             "unix_start_time_ms": 1700000000000, "status": "success"},
-            {"id": "op2", "type": "backup", "plan_id": "plan-media",
-             "unix_start_time_ms": 1699000000000, "status": "success"},
-        ])
+    if "GetConfig" in url:
+        return _Resp({"plans": [{"id": "plan-main"}, {"id": "plan-media"}]})
+    if "GetOperations" in url:
+        return _Resp({"operations": [
+            {"id": "op1", "plan_id": "plan-main", "operation_backup": {},
+             "unix_time_start_ms": 1700000000000, "status": "STATUS_SUCCESS"},
+            {"id": "op2", "plan_id": "plan-media", "operation_backup": {},
+             "unix_time_start_ms": 1699000000000, "status": "STATUS_SUCCESS"},
+        ]})
     return _Resp({})
 
 
@@ -67,7 +64,7 @@ class TransformTest(unittest.TestCase):
         out = transform.run(_input())
         self.assertEqual(out["plan_count"], 2)
         self.assertTrue(out["has_backup"])
-        self.assertEqual(out["last_status"], "success")
+        self.assertEqual(out["last_status"], "STATUS_SUCCESS")
         self.assertIn("ago", out["last_backup_ago"])
 
     @patch("urllib.request.urlopen", _fake_urlopen)

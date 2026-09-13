@@ -30,35 +30,28 @@ class _Resp:
 
 
 def _fake_urlopen(req, timeout=None):
-    return _Resp([
-        {
-            "device": {
-                "name": "sda",
-                "model": "WD Red",
-                "status": "PASS",
-                "temp": 38,
-                "power_on_hours": 12000,
+    return _Resp({
+        "success": True,
+        "data": {
+            "summary": {
+                "uuid-1": {
+                    "device": {"device_name": "sda", "model_name": "WD Red",
+                               "device_status": "passed"},
+                    "smart": {"temp": 38, "power_on_hours": 12000},
+                },
+                "uuid-2": {
+                    "device": {"device_name": "sdb", "model_name": "Seagate",
+                               "device_status": "failed"},
+                    "smart": {"temp": 55, "power_on_hours": 30000},
+                },
+                "uuid-3": {
+                    "device": {"device_name": "sdc", "model_name": "Toshiba",
+                               "device_status": "warning"},
+                    "smart": {"temp": 60, "power_on_hours": 40000},
+                },
             }
         },
-        {
-            "device": {
-                "name": "sdb",
-                "model": "Seagate",
-                "status": "WARN",
-                "temp": 55,
-                "power_on_hours": 30000,
-            }
-        },
-        {
-            "device": {
-                "name": "sdc",
-                "model": "Toshiba",
-                "status": "FAIL",
-                "temp": 60,
-                "power_on_hours": 40000,
-            }
-        },
-    ])
+    })
 
 
 def _input(url="http://scrutiny.example.com:8080"):
@@ -85,8 +78,9 @@ class TransformTest(unittest.TestCase):
         self.assertEqual(out["warned_count"], 1)
         self.assertEqual(out["healthy_count"], 1)
         self.assertFalse(out["all_good"])
-        self.assertEqual(out["failed"][0], "sdc")
+        self.assertEqual(out["failed"][0], "sdb")
         self.assertEqual(len(out["devices"]), 3)
+        self.assertEqual(out["devices"][1]["temp"], 55)
 
     @patch("urllib.request.urlopen", _fake_urlopen)
     def test_unreachable(self, *_):

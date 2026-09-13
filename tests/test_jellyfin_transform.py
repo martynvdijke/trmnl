@@ -74,7 +74,7 @@ class TransformTest(unittest.TestCase):
         self.assertEqual(p["runtime_min"], 45)
         self.assertEqual(p["position_min"], 15)
         self.assertEqual(p["progress"], 33)
-        self.assertIn("api_key=key", p["poster"])
+        self.assertIn("ApiKey=key", p["poster"])
         self.assertIn("/Items/series-1/Images/Primary", p["poster"])
 
     def test_skips_idle_sessions(self):

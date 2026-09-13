@@ -53,36 +53,43 @@ class TransformTest(unittest.TestCase):
         self.assertIn("error", out)
 
     def test_happy_path_counts_and_progress(self):
-        size = {"totalElements": 42, "content": []}
-        listing = {
-            "content": [
-                {"title": "Dune", "authors": [{"name": "Frank Herbert"}], "progress": 0.5},
-                {"title": "Hyperion", "authors": [{"name": "Dan Simmons"}], "progress": 80},
-            ]
-        }
-        fake = _fake({"size=1": size, "size=5": listing})
+        books = [
+            {"title": "Dune", "lastReadTime": "2024-03-02T10:00:00Z",
+             "metadata": {"authors": ["Frank Herbert"]},
+             "epubProgress": {"percentage": 50}},
+            {"title": "Hyperion", "lastReadTime": "2024-03-03T10:00:00Z",
+             "metadata": {"authors": ["Dan Simmons"]},
+             "pdfProgress": {"percentage": 80}},
+        ]
+        fake = _fake({"/api/v1/books": books})
         with mock.patch.object(urllib.request, "urlopen", fake):
             out = transform.run(_input(url="https://booklore.local", api_key="tok"))
         self.assertNotIn("error", out)
-        self.assertEqual(out["total_books"], 42)
+        self.assertEqual(out["total_books"], 2)
         self.assertEqual(out["reading_count"], 2)
-        self.assertEqual(out["reading"][0]["title"], "Dune")
-        self.assertEqual(out["reading"][0]["author"], "Frank Herbert")
-        self.assertEqual(out["reading"][0]["progress_pct"], 50)
-        self.assertEqual(out["reading"][1]["progress_pct"], 80)
+        # Most recently read first.
+        self.assertEqual(out["reading"][0]["title"], "Hyperion")
+        self.assertEqual(out["reading"][0]["author"], "Dan Simmons")
+        self.assertEqual(out["reading"][0]["progress_pct"], 80)
+        self.assertEqual(out["reading"][1]["title"], "Dune")
+        self.assertEqual(out["reading"][1]["progress_pct"], 50)
 
-    def test_string_authors_and_zero_progress(self):
-        listing = {
-            "content": [
-                {"title": "The Name of the Wind", "authors": "Patrick Rothfuss", "progress": 0},
-            ]
-        }
-        fake = _fake({"size=1": {"totalElements": 7}, "size=5": listing})
+    def test_authors_joined_and_zero_progress_excluded(self):
+        books = [
+            {"title": "The Name of the Wind",
+             "metadata": {"authors": ["Patrick Rothfuss"]},
+             "epubProgress": {"percentage": 0}},
+            {"title": "Dune",
+             "metadata": {"authors": ["Frank Herbert", "Kevin J Anderson"]},
+             "koreaderProgress": {"percentage": 12.4}},
+        ]
+        fake = _fake({"/api/v1/books": books})
         with mock.patch.object(urllib.request, "urlopen", fake):
             out = transform.run(_input(url="https://booklore.local", api_key="tok"))
-        self.assertEqual(out["total_books"], 7)
-        self.assertEqual(out["reading"][0]["author"], "Patrick Rothfuss")
-        self.assertEqual(out["reading"][0]["progress_pct"], 0)
+        self.assertEqual(out["total_books"], 2)
+        self.assertEqual(out["reading_count"], 1)
+        self.assertEqual(out["reading"][0]["author"], "Frank Herbert, Kevin J Anderson")
+        self.assertEqual(out["reading"][0]["progress_pct"], 12)
 
 
 if __name__ == "__main__":
