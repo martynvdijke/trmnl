@@ -1,3 +1,10 @@
+## [1.4.6](https://github.com/martynvdijke/trmnl/compare/v1.4.5...v1.4.6) (2026-09-13)
+
+
+### Bug Fixes
+
+* **backrest:** drop auth fields flagged by trmnlp lint ([d854f6a](https://github.com/martynvdijke/trmnl/commit/d854f6a5c712e27c8320aa99b62fbba049b9f6ab))
+
 ## [1.4.5](https://github.com/martynvdijke/trmnl/compare/v1.4.4...v1.4.5) (2026-09-13)
 
 
