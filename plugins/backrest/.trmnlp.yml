@@ -12,8 +12,6 @@ transform_runtime: enabled
 # values of custom fields (defined in src/settings.yml)
 custom_fields:
   url: ""
-  username: ""
-  password: ""
   bio: ""
 
 # override variables

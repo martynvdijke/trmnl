@@ -4,14 +4,12 @@
 Backrest does not expose a REST API: it speaks ConnectRPC over HTTP under
 POST /v1.Backrest/* (JSON bodies). This transform calls GetConfig for the plan
 list and GetOperations for recent operations, then determines when the last
-backup ran and whether it is stale. Optional HTTP Basic auth is applied when a
-username/password is configured.
+backup ran and whether it is stale.
 
 Network is attempted but wrapped in try/except so a missing server or an
 offline sandbox degrades to a clear error rather than a crash.
 """
 
-import base64
 import json
 import sys
 import time
@@ -31,13 +29,6 @@ def _num(value):
         return int(value or 0)
     except (TypeError, ValueError):
         return 0
-
-
-def _auth_header(username, password):
-    if not username and not password:
-        return {}
-    raw = (username + ":" + password).encode("utf-8")
-    return {"Authorization": "Basic " + base64.b64encode(raw).decode("ascii")}
 
 
 def _rpc(base, method, payload, headers):
@@ -61,13 +52,9 @@ def _fmt_ago(ms):
 
 def run(input):
     url = ""
-    username = ""
-    password = ""
     try:
         fields = input["trmnl"]["plugin_settings"]["custom_fields_values"]
         url = fields.get("url") or ""
-        username = fields.get("username") or ""
-        password = fields.get("password") or ""
     except (KeyError, TypeError):
         pass
     if not url:
@@ -75,7 +62,6 @@ def run(input):
 
     base = url.rstrip("/")
     headers = {"Content-Type": "application/json"}
-    headers.update(_auth_header(username, password))
 
     try:
         config = _rpc(base, "GetConfig", {}, headers) or {}
