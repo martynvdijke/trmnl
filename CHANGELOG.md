@@ -1,3 +1,11 @@
+## [1.4.5](https://github.com/martynvdijke/trmnl/compare/v1.4.4...v1.4.5) (2026-09-13)
+
+
+### Bug Fixes
+
+* correct upstream API endpoints across plugins ([c4c1840](https://github.com/martynvdijke/trmnl/commit/c4c1840ac08890b30e8615f78885ee0c7831c041))
+* **tests:** align suite with corrected upstream endpoints ([8f166eb](https://github.com/martynvdijke/trmnl/commit/8f166eb3ee18222d68981e5ffd3955cd124c71b1))
+
 ## [1.4.4](https://github.com/martynvdijke/trmnl/compare/v1.4.3...v1.4.4) (2026-09-11)
 
 
