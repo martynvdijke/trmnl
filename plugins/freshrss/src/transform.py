@@ -24,7 +24,7 @@ def _http(url, headers=None, data=None, method="GET"):
 
 def _login(url, username, password):
     body = (
-        "email=%s&password=%s" % (quote(username), quote(password))
+        "Email=%s&Passwd=%s" % (quote(username), quote(password))
     ).encode("utf-8")
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
     text = _http(
@@ -62,7 +62,7 @@ def run(input):
 
     try:
         raw = _http(
-            url.rstrip("/") + "/api/greader.php/reader/api/0/unread-count",
+            url.rstrip("/") + "/api/greader.php/reader/api/0/unread-count?output=json",
             headers={"Authorization": "GoogleLogin auth=" + token},
         )
     except RuntimeError as e:

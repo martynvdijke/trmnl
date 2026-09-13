@@ -7,7 +7,7 @@ static_data: ''
 polling_verb: get
 framework_version: latest
 serverless_language: python
-polling_url: "{{url}}/Sessions?api_key={{api_key}}"
+polling_url: "{{url}}/Sessions?ApiKey={{api_key}}"
 polling_headers: ''
 polling_body: ''
 id: 450296

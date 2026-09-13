@@ -43,7 +43,7 @@ def _poster(url, api_key, item):
         url.rstrip("/")
         + "/Items/"
         + str(poster_id)
-        + "/Images/Primary?maxWidth=400&quality=80&api_key="
+        + "/Images/Primary?maxWidth=400&quality=80&ApiKey="
         + api_key
     )
 

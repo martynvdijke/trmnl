@@ -9,7 +9,7 @@ framework_version: latest
 serverless_language: python
 polling_url: "{{url}}/api/greader.php/accounts/ClientLogin"
 polling_headers: Content-Type=application/x-www-form-urlencoded
-polling_body: email={{username}}&password={{password}}
+polling_body: Email={{username}}&Passwd={{password}}
 id: 450308
 oauth_enabled: 'false'
 oauth_pkce_enabled: 'no'

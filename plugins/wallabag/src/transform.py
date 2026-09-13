@@ -67,7 +67,7 @@ def run(input):
 
     try:
         entries = _http(
-            url.rstrip("/") + "/api/entries.json?archive=0&limit=1",
+            url.rstrip("/") + "/api/entries.json?archive=0&perPage=1",
             headers={"Authorization": "Bearer " + tok},
         )
     except RuntimeError as e:

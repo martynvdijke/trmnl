@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 """Backrest last-backup transform for trmnl-backrest.
 
-Backrest exposes a plain (or basic-auth) REST API. This transform reads the
-list of backup plans and the recent operations to determine when the last
-backup ran and whether it is stale.
+Backrest does not expose a REST API: it speaks ConnectRPC over HTTP under
+POST /v1.Backrest/* (JSON bodies). This transform calls GetConfig for the plan
+list and GetOperations for recent operations, then determines when the last
+backup ran and whether it is stale. Optional HTTP Basic auth is applied when a
+username/password is configured.
 
 Network is attempted but wrapped in try/except so a missing server or an
 offline sandbox degrades to a clear error rather than a crash.
 """
 
+import base64
 import json
 import sys
 import time
@@ -30,12 +33,16 @@ def _num(value):
         return 0
 
 
-def _as_list(payload, key):
-    if isinstance(payload, list):
-        return payload
-    if isinstance(payload, dict):
-        return payload.get(key, [])
-    return []
+def _auth_header(username, password):
+    if not username and not password:
+        return {}
+    raw = (username + ":" + password).encode("utf-8")
+    return {"Authorization": "Basic " + base64.b64encode(raw).decode("ascii")}
+
+
+def _rpc(base, method, payload, headers):
+    body = json.dumps(payload).encode("utf-8")
+    return _http("POST", base + "/v1.Backrest/" + method, headers, body)
 
 
 def _fmt_ago(ms):
@@ -54,37 +61,54 @@ def _fmt_ago(ms):
 
 def run(input):
     url = ""
+    username = ""
+    password = ""
     try:
         fields = input["trmnl"]["plugin_settings"]["custom_fields_values"]
         url = fields.get("url") or ""
+        username = fields.get("username") or ""
+        password = fields.get("password") or ""
     except (KeyError, TypeError):
         pass
     if not url:
         return {"error": "Set the url custom field to your Backrest server address."}
 
     base = url.rstrip("/")
+    headers = {"Content-Type": "application/json"}
+    headers.update(_auth_header(username, password))
+
     try:
-        plans = _as_list(_http("GET", base + "/api/v1/plans"), "plans")
+        config = _rpc(base, "GetConfig", {}, headers) or {}
     except Exception:
-        return {"error": "Could not reach Backrest at " + base + "/api/v1/plans"}
+        return {"error": "Could not reach Backrest at " + base + "/v1.Backrest/GetConfig"}
+
+    plans = config.get("plans") if isinstance(config, dict) else []
+    if not isinstance(plans, list):
+        plans = []
 
     plan_names = []
     for p in plans:
         if isinstance(p, dict):
-            plan_names.append(p.get("id") or p.get("name") or "?")
+            plan_names.append(p.get("id") or p.get("repo") or "?")
+
+    try:
+        ops_resp = _rpc(base, "GetOperations", {"selector": {}, "last_n": 20}, headers) or {}
+    except Exception:
+        ops_resp = {}
+    ops = ops_resp.get("operations") if isinstance(ops_resp, dict) else []
+    if not isinstance(ops, list):
+        ops = []
+
+    # A backup operation carries the oneof field "operation_backup".
+    backups = [
+        o for o in ops if isinstance(o, dict) and o.get("operation_backup") is not None
+    ]
+
+    def _t(o):
+        return _num(o.get("unix_time_start_ms"))
 
     last_backup_ms = 0
     last_status = ""
-    try:
-        ops = _as_list(_http("GET", base + "/api/v1/operations?limit=20"), "operations")
-    except Exception:
-        ops = []
-
-    backups = [o for o in ops if isinstance(o, dict) and o.get("type") == "backup"]
-
-    def _t(o):
-        return _num(o.get("unix_start_time_ms") or o.get("start_time") or 0)
-
     if backups:
         backups.sort(key=_t, reverse=True)
         b = backups[0]

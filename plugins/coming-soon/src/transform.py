@@ -14,8 +14,8 @@ import sys
 import urllib.request
 
 
-def _http(url, timeout=10):
-    req = urllib.request.Request(url)
+def _http(url, headers=None, timeout=10):
+    req = urllib.request.Request(url, headers=headers or {})
     with urllib.request.urlopen(req, timeout=timeout) as resp:
         return json.loads(resp.read().decode("utf-8"))
 
@@ -46,12 +46,10 @@ def run(input):
     now = datetime.datetime.now(datetime.timezone.utc)
     start = now.strftime("%Y-%m-%d")
     end = (now + datetime.timedelta(days=14)).strftime("%Y-%m-%d")
-    cal_url = (
-        base + "/api/v3/calendar?start=" + start + "&end=" + end + "&apikey=" + api_key
-    )
+    cal_url = base + "/api/v3/calendar?start=" + start + "&end=" + end
 
     try:
-        items = _http(cal_url) or []
+        items = _http(cal_url, {"X-Api-Key": api_key}) or []
     except Exception:
         return {"error": "Could not fetch the Sonarr/Radarr calendar. Check the url and api_key custom fields."}
     if not isinstance(items, list):
@@ -82,9 +80,7 @@ def run(input):
         if not poster_id:
             continue
 
-        poster = (
-            base + "/api/v3/MediaCover/" + str(poster_id) + "/poster.jpg?apikey=" + api_key
-        )
+        poster = base + "/MediaCover/" + str(poster_id) + "/poster.jpg"
         collected.append(
             {
                 "title": title,

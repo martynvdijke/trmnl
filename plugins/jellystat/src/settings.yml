@@ -7,7 +7,7 @@ static_data: ''
 polling_verb: post
 framework_version: latest
 serverless_language: python
-polling_url: "{{url}}/api/auth/login"
+polling_url: "{{url}}/auth/login"
 polling_headers: Content-Type=application/json
 polling_body: '{"username":"{{username}}","password":"{{password}}"}'
 id: 450299

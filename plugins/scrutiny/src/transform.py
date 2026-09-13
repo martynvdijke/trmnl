@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Scrutiny disk-health transform for trmnl-scrutiny.
 
-Scrutiny exposes a public (or basic-auth) health endpoint at
-/api/health that returns a list of monitored devices with their SMART
-status. This transform reshapes that list into a compact health summary
-for the Liquid templates.
+Scrutiny exposes device health at GET /api/summary, which returns
+{"success": true, "data": {"summary": {<uuid>: {"device": {...}, "smart": {...}}}}}.
+This transform reshapes that map into a compact health summary for the Liquid
+templates.
 
 Network is attempted but wrapped in try/except so a missing server or an
 offline sandbox degrades to a clear error rather than a crash.
@@ -30,6 +30,16 @@ def _num(value):
         return 0
 
 
+def _bucket(status):
+    """Map Scrutiny's status strings (passed/failed/warning) to FAIL/WARN/OK."""
+    s = str(status or "").lower()
+    if "fail" in s:
+        return "FAIL"
+    if "warn" in s:
+        return "WARN"
+    return "OK"
+
+
 def run(input):
     url = ""
     try:
@@ -42,26 +52,47 @@ def run(input):
 
     base = url.rstrip("/")
     try:
-        data = _http("GET", base + "/api/health") or []
+        data = _http("GET", base + "/api/summary") or {}
     except Exception:
-        return {"error": "Could not reach Scrutiny at " + base + "/api/health"}
+        return {"error": "Could not reach Scrutiny at " + base + "/api/summary"}
 
-    if not isinstance(data, list):
-        data = data.get("devices", []) if isinstance(data, dict) else []
+    summary = {}
+    if isinstance(data, dict):
+        inner = data.get("data")
+        if isinstance(inner, dict):
+            summary = inner.get("summary") or {}
+        if not isinstance(summary, dict):
+            summary = {}
+        if not summary:
+            # Fallback for older/alternative deployments returning a flat map.
+            summary = data.get("summary") or {}
+    if not isinstance(summary, dict):
+        summary = {}
 
-    total = len(data)
+    total = len(summary)
     failed = []
     warned = []
     devices = []
-    for d in data:
-        if not isinstance(d, dict):
+    for entry in summary.values():
+        if not isinstance(entry, dict):
             continue
-        dev = d.get("device", d)
-        status = (dev.get("status") or d.get("status") or "UNKNOWN").upper()
-        model = dev.get("model") or d.get("model") or "Unknown"
-        name = dev.get("name") or model
-        temp = _num(dev.get("temp") or d.get("temp"))
-        hours = _num(dev.get("power_on_hours") or d.get("power_on_hours"))
+        dev = entry.get("device") or {}
+        smart = entry.get("smart") or {}
+        if not isinstance(smart, dict):
+            smart = {}
+        status = _bucket(
+            dev.get("device_status") or entry.get("device_status") or "unknown"
+        )
+        model = dev.get("model_name") or dev.get("model") or "Unknown"
+        name = (
+            dev.get("device_label")
+            or dev.get("label")
+            or dev.get("device_name")
+            or dev.get("name")
+            or model
+        )
+        temp = _num(smart.get("temp")) or _num(dev.get("temp"))
+        hours = _num(smart.get("power_on_hours")) or _num(dev.get("power_on_hours"))
         devices.append(
             {"name": name, "model": model, "status": status, "temp": temp, "hours": hours}
         )

@@ -4,12 +4,12 @@ strategy: polling
 no_screen_padding: 'no'
 dark_mode: 'no'
 static_data: ''
-polling_verb: get
+polling_verb: post
 framework_version: latest
 serverless_language: python
-polling_url: "{{url}}/api/v1/plans"
-polling_headers: ''
-polling_body: ''
+polling_url: "{{url}}/v1.Backrest/GetConfig"
+polling_headers: Content-Type=application/json
+polling_body: '{}'
 id: 450314
 oauth_enabled: 'false'
 oauth_pkce_enabled: 'no'
@@ -38,6 +38,18 @@ custom_fields:
   description: The base URL of your Backrest server
   placeholder: http://backrest.example.com:9898
   help_text: Please include the protocol (e.g. http or https) and port
+- keyname: username
+  name: Backrest Username
+  field_type: text
+  description: Username for HTTP Basic auth (leave blank if auth is disabled)
+  placeholder: Your Backrest username
+  help_text: Only needed if Backrest authentication is enabled
+- keyname: password
+  name: Backrest Password
+  field_type: password
+  description: Password for HTTP Basic auth (leave blank if auth is disabled)
+  placeholder: Your Backrest password
+  help_text: Only needed if Backrest authentication is enabled
 - keyname: bio
   name: About This Plugin
   category: entertainment

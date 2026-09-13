@@ -58,7 +58,7 @@ def run(input):
     try:
         data = _http(
             "GET",
-            base + "/api/sessions?sort=updatedAt&collapsed=true&itemsPerPage=20",
+            base + "/api/sessions?sort=updatedAt&itemsPerPage=20",
             headers,
         ) or {}
     except Exception:

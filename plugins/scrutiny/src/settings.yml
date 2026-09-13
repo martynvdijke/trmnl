@@ -7,7 +7,7 @@ static_data: ''
 polling_verb: get
 framework_version: latest
 serverless_language: python
-polling_url: "{{url}}/api/health"
+polling_url: "{{url}}/api/summary"
 polling_headers: ''
 polling_body: ''
 id: 450313

@@ -7,7 +7,7 @@ static_data: ''
 polling_verb: get
 framework_version: latest
 serverless_language: python
-polling_url: "{{url}}/api/books?page=0&size=1"
+polling_url: "{{url}}/api/v1/books"
 polling_headers: Authorization=Bearer {{api_key}}
 polling_body: ''
 id: 450310

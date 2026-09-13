@@ -7,8 +7,8 @@ static_data: ''
 polling_verb: get
 framework_version: latest
 serverless_language: python
-polling_url: "{{url}}/api/v3/calendar?apikey={{api_key}}"
-polling_headers: ''
+polling_url: "{{url}}/api/v3/calendar"
+polling_headers: X-Api-Key={{api_key}}
 polling_body: ''
 id: 450302
 oauth_enabled: 'false'

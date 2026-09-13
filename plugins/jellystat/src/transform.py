@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """Jellystat watch stats transform for trmnl-jellystat.
 
-Jellystat requires a login (POST /api/auth/login) to obtain a bearer token,
-then authenticated GETs for the summary and the most-watched shows. The poller
-cannot perform this two-step flow, so this transform performs the network
-calls itself (stdlib urllib only) and reshapes the result for the Liquid
-templates.
+Jellystat requires a login (POST /auth/login, outside the /api prefix) to
+obtain a bearer token, then authenticated GETs/POSTs under /stats. The poller
+cannot perform this two-step flow, so this transform performs the network calls
+itself (stdlib urllib only) and reshapes the result for the Liquid templates.
 
 Network is attempted but wrapped in try/except so a missing server or an
 offline sandbox degrades to a clear error rather than a crash.
@@ -14,6 +13,8 @@ offline sandbox degrades to a clear error rather than a crash.
 import json
 import sys
 import urllib.request
+
+DAYS = 30
 
 
 def _http(method, url, headers=None, data=None, timeout=10):
@@ -32,28 +33,23 @@ def _extract_token(payload):
     data = payload.get("data")
     if isinstance(data, dict) and data.get("token"):
         return data["token"]
-    session = payload.get("session")
-    if isinstance(session, dict) and session.get("token"):
-        return session["token"]
     return ""
 
 
-def _login(url, username, password):
+def _login(base, username, password):
     body = json.dumps({"username": username, "password": password}).encode("utf-8")
     headers = {"Content-Type": "application/json"}
-    base = url.rstrip("/")
-    try:
-        payload = _http("POST", base + "/api/auth/login", headers, body)
-    except Exception:
-        payload = _http("POST", base + "/api/login", headers, body)
-    return _extract_token(payload)
+    return _extract_token(_http("POST", base + "/auth/login", headers, body))
 
 
 def _num(value):
     try:
         return int(value or 0)
     except (TypeError, ValueError):
-        return 0
+        try:
+            return int(float(value or 0))
+        except (TypeError, ValueError):
+            return 0
 
 
 def run(input):
@@ -71,7 +67,10 @@ def run(input):
         return {"error": "Set the url custom field to your Jellystat server address."}
 
     base = url.rstrip("/")
-    token = _login(base, username, password)
+    try:
+        token = _login(base, username, password)
+    except Exception:
+        token = ""
     if not token:
         return {"error": "Could not log in to Jellystat. Check the url, username and password custom fields."}
 
@@ -80,39 +79,54 @@ def run(input):
         "Content-Type": "application/json",
     }
 
+    # getViewsOverTime rows are grouped by day and library; "duration" is in
+    # minutes and "count" is the number of plays.
+    hours = 0.0
+    plays = 0
     try:
-        summary = _http("GET", base + "/api/summary", headers) or {}
+        views = _http("GET", base + "/stats/getViewsOverTime?days=%d" % DAYS, headers) or {}
+        for day in (views.get("stats") or []) if isinstance(views, dict) else []:
+            if not isinstance(day, dict):
+                continue
+            for key, val in day.items():
+                if key == "Key" or not isinstance(val, dict):
+                    continue
+                plays += _num(val.get("count"))
+                hours += _num(val.get("duration")) / 60.0
     except Exception:
-        return {"error": "Could not fetch the Jellystat summary. Is the server reachable?"}
+        pass
 
+    users = 0
     try:
-        watched = _http("GET", base + "/api/items/watched?type=show&limit=5", headers) or []
+        activity = _http("GET", base + "/stats/getAllUserActivity", headers) or []
+        if isinstance(activity, list):
+            users = len(
+                {a.get("UserName") for a in activity if isinstance(a, dict) and a.get("UserName")}
+            )
     except Exception:
-        watched = []
-
-    if not isinstance(watched, list):
-        watched = []
-
-    hours = summary.get("total_hours")
-    if hours is None:
-        hours = _num(summary.get("show_hours")) + _num(summary.get("movie_hours"))
+        pass
 
     top_shows = []
-    for w in watched:
-        if not isinstance(w, dict):
-            continue
-        top_shows.append(
-            {
-                "name": w.get("name") or "",
-                "plays": _num(w.get("plays")),
-                "hours": _num(w.get("hours")),
-            }
-        )
+    try:
+        body = json.dumps({"days": DAYS, "type": "Series"}).encode("utf-8")
+        rows = _http("POST", base + "/stats/getMostViewedByType", headers, body) or []
+        for r in rows if isinstance(rows, list) else []:
+            if not isinstance(r, dict):
+                continue
+            top_shows.append(
+                {
+                    "name": r.get("Name") or "",
+                    "plays": _num(r.get("Plays")),
+                    "hours": round(_num(r.get("total_playback_duration")) / 3600.0, 1),
+                }
+            )
+    except Exception:
+        top_shows = []
 
     return {
-        "hours": _num(hours),
-        "plays": _num(summary.get("total_plays")),
-        "users": _num(summary.get("total_users")),
+        "hours": round(hours, 1),
+        "plays": plays,
+        "users": users,
         "top_shows": top_shows,
         "top_show": top_shows[0] if top_shows else {},
     }

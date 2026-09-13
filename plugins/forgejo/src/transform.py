@@ -2,8 +2,10 @@
 """Forgejo PRs/issues/CI transform for trmnl-forgejo.
 
 Forgejo requires a token. This transform reads the authenticated user's open
-PRs and issues, and best-effort fetches the CI (Forgejo Actions) runs for the
-user's first repository to surface running workflows and the last run result.
+issues (which include pull requests) and splits them by the presence of the
+``pull_request`` field, then best-effort fetches the CI (Forgejo Actions) runs
+for the user's first repository to surface running workflows and the last run
+result.
 
 Network is attempted but wrapped in try/except so a missing server or an
 offline sandbox degrades to a clear error rather than a crash.
@@ -48,27 +50,25 @@ def run(input):
         "Content-Type": "application/json",
     }
 
+    # /user/issues has no PR/issue filter param; PRs carry a pull_request field.
     try:
-        prs = _as_list(
-            _http("GET", base + "/api/v1/user/issues?state=open&type=pr&limit=30", headers),
+        items = _as_list(
+            _http("GET", base + "/api/v1/user/issues?state=open&limit=50", headers),
             "data",
         ) or []
     except Exception:
         return {"error": "Could not reach Forgejo at " + base + "/api/v1/user/issues"}
 
-    try:
-        issues = _as_list(
-            _http("GET", base + "/api/v1/user/issues?state=open&type=issues&limit=50", headers),
-            "data",
-        ) or []
-    except Exception:
-        issues = []
-
     pr_list = []
-    for p in prs:
-        if isinstance(p, dict):
-            repo = (p.get("repository") or {}).get("full_name", "")
-            pr_list.append({"title": p.get("title", ""), "repo": repo})
+    open_issues = 0
+    for it in items:
+        if not isinstance(it, dict):
+            continue
+        if it.get("pull_request"):
+            repo = (it.get("repository") or {}).get("full_name", "")
+            pr_list.append({"title": it.get("title", ""), "repo": repo})
+        else:
+            open_issues += 1
 
     ci_running = 0
     last_ci = ""
@@ -79,7 +79,7 @@ def run(input):
             if full:
                 runs = _as_list(
                     _http("GET", base + "/api/v1/repos/" + full + "/actions/runs?limit=10", headers),
-                    "data",
+                    "workflow_runs",
                 ) or []
                 ci_running = sum(
                     1 for r in runs if isinstance(r, dict) and r.get("status") == "running"
@@ -93,7 +93,7 @@ def run(input):
     return {
         "open_prs": len(pr_list),
         "prs": pr_list[:10],
-        "open_issues": len(issues),
+        "open_issues": open_issues,
         "ci_running": ci_running,
         "last_ci": last_ci,
     }

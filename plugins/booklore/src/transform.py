@@ -27,14 +27,37 @@ def _http_json(url, headers=None):
         raise RuntimeError("invalid JSON response")
 
 
-def _progress_pct(progress):
-    try:
-        p = float(progress)
-    except (TypeError, ValueError):
-        return 0
-    if p <= 1 and p > 0:
-        p = p * 100
-    return max(0, min(100, int(p)))
+def _progress_pct(book):
+    # Booklore stores per-format progress as {percentage: 0-100}.
+    for key in (
+        "epubProgress",
+        "pdfProgress",
+        "koreaderProgress",
+        "audiobookProgress",
+        "koboProgress",
+        "cbxProgress",
+    ):
+        p = book.get(key)
+        if isinstance(p, dict) and p.get("percentage") is not None:
+            try:
+                return max(0, min(100, int(round(float(p["percentage"])))))
+            except (TypeError, ValueError):
+                continue
+    return 0
+
+
+def _authors(book):
+    meta = book.get("metadata")
+    if not isinstance(meta, dict):
+        meta = {}
+    authors = meta.get("authors") or book.get("authors") or []
+    names = []
+    if isinstance(authors, list):
+        for a in authors:
+            names.append(str(a.get("name", "")) if isinstance(a, dict) else str(a))
+    elif authors:
+        names.append(str(authors))
+    return ", ".join(n for n in names if n)
 
 
 def run(input):
@@ -46,42 +69,37 @@ def run(input):
         return {"error": "Missing URL. Set the URL custom field to your Booklore instance."}
 
     headers = {"Authorization": "Bearer " + api_key} if api_key else {}
-    base = url.rstrip("/") + "/api/books"
+    base = url.rstrip("/") + "/api/v1/books"
 
     try:
-        size_resp = _http_json(base + "?page=0&size=1", headers=headers)
-        list_resp = _http_json(base + "?page=0&size=5", headers=headers)
+        books = _http_json(base, headers=headers)
     except RuntimeError as e:
         return {"error": str(e)}
 
-    try:
-        total_books = int(size_resp.get("totalElements", size_resp.get("total", 0)) or 0)
-    except (TypeError, ValueError):
-        total_books = 0
+    if isinstance(books, dict):
+        # Defensive: tolerate a wrapped/paginated shape if Booklore changes.
+        books = books.get("content", books.get("data", []))
+    if not isinstance(books, list):
+        books = []
+    books = [b for b in books if isinstance(b, dict)]
 
-    content = list_resp.get("content", list_resp.get("data", []))
+    with_progress = [b for b in books if _progress_pct(b) > 0]
+    with_progress.sort(key=lambda b: str(b.get("lastReadTime") or ""), reverse=True)
+
     reading = []
-    for b in content:
-        authors = b.get("authors") or []
-        names = []
-        if isinstance(authors, list):
-            for a in authors:
-                if isinstance(a, dict):
-                    names.append(str(a.get("name", "")))
-                else:
-                    names.append(str(a))
-        else:
-            names.append(str(authors))
-        author = ", ".join(n for n in names if n)
-        pct = _progress_pct(b.get("progress", 0))
+    for b in with_progress[:5]:
+        meta = b.get("metadata")
+        if not isinstance(meta, dict):
+            meta = {}
+        title = b.get("title") or meta.get("title") or "Unknown"
         reading.append({
-            "title": b.get("title", "Unknown"),
-            "author": author,
-            "progress_pct": pct,
+            "title": title,
+            "author": _authors(b),
+            "progress_pct": _progress_pct(b),
         })
 
     return {
-        "total_books": total_books,
+        "total_books": len(books),
         "reading": reading,
         "reading_count": len(reading),
     }
