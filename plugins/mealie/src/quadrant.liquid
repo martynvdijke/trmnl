@@ -1,19 +1,27 @@
-<div class="layout layout--col layout--stretch gap">
+<div class="layout layout--col gap--small">
   {% if error %}
     <div class="item">
-      <span class="value value--small">{{ error }}</span>
+      <div class="content">
+        <span class="value value--small">{{ error }}</span>
+      </div>
     </div>
   {% else %}
-    {% if image %}
+    <div class="grid grid--cols-2">
       <div class="item">
-        <img class="image image-cover image-dither rounded" src="{{ image }}" />
+        <div class="content">
+          <span class="value value--small lg:value--medium">{{ name }}</span>
+          {% if total_time %}<span class="label">{{ total_time }}</span>{% endif %}
+          {% if servings %}<span class="label label--small">{{ servings }} servings</span>{% endif %}
+        </div>
       </div>
-    {% endif %}
-    <div class="item">
-      <span class="value value--small lg:value--medium">{{ name }}</span>
-      <div class="meta">
-        {% if total_time %}<span class="label">{{ total_time }}</span>{% endif %}
-        {% if servings %}<span class="label">{{ servings }} servings</span>{% endif %}
+      <div class="item">
+        {% if image %}
+          <img class="image image-cover image-dither rounded" src="{{ image }}" />
+        {% elsif rating %}
+          <div class="content">
+            <span class="value value--small">★ {{ rating }}</span>
+          </div>
+        {% endif %}
       </div>
     </div>
   {% endif %}

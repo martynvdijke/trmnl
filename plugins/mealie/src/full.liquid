@@ -1,52 +1,60 @@
-<div class="layout layout--col layout--stretch gap">
+<div class="layout layout--col gap--small">
   {% if error %}
     <div class="item">
       <div class="content">
         <span class="value value--medium">{{ error }}</span>
       </div>
     </div>
-  {% elsif image %}
-    <div class="item">
-      <img class="image image-cover image-dither rounded" src="{{ image }}" />
-    </div>
-  {% endif %}
-  <div class="item">
-    <div class="content">
-      <span class="value value--large">{{ name }}</span>
-    </div>
-    {% if description %}
-      <div class="meta">
-        <span class="label">{{ description }}</span>
+  {% else %}
+    <div class="grid grid--cols-2">
+      <div class="item">
+        <div class="content">
+          <span class="value value--large">{{ name }}</span>
+          {% if description %}<span class="label label--small">{{ description | truncate: 90 }}</span>{% endif %}
+          {% if prep_time %}<span class="label">Prep {{ prep_time }}</span>{% endif %}
+          {% if cook_time %}<span class="label">Cook {{ cook_time }}</span>{% endif %}
+          {% if total_time %}<span class="label">Total {{ total_time }}</span>{% endif %}
+          {% if servings %}<span class="label">{{ servings }} servings</span>{% endif %}
+        </div>
       </div>
-    {% endif %}
-    <div class="meta">
-      {% if prep_time %}<span class="label">Prep {{ prep_time }}</span>{% endif %}
-      {% if cook_time %}<span class="label">Cook {{ cook_time }}</span>{% endif %}
-      {% if total_time %}<span class="label">Total {{ total_time }}</span>{% endif %}
-      {% if servings %}<span class="label">{{ servings }} servings</span>{% endif %}
-      {% if rating %}<span class="label">★ {{ rating }}</span>{% endif %}
+      <div class="item">
+        {% if image %}
+          <img class="image image-cover image-dither rounded" src="{{ image }}" />
+        {% elsif rating %}
+          <div class="content">
+            <span class="value value--medium">★ {{ rating }}</span>
+            <span class="label label--small">Recipe rating</span>
+          </div>
+        {% endif %}
+      </div>
     </div>
-  </div>
-  {% if ingredients.size > 0 %}
-    <div class="hr"></div>
-    <div class="item">
-      <span class="value value--small lg:value--medium">Ingredients</span>
-      {% for ingredient in ingredients %}
-        <div class="meta">
-          <span class="label">{{ ingredient }}</span>
+    <div class="grid grid--cols-2">
+      {% if ingredients.size > 0 %}
+        <div class="item">
+          <div class="content">
+            <span class="value value--small lg:value--medium">Ingredients</span>
+            {% for ingredient in ingredients limit: 6 %}
+              <span class="label label--small">• {{ ingredient }}</span>
+            {% endfor %}
+            {% if ingredients.size > 6 %}
+              <span class="label label--small">+ {{ ingredients.size | minus: 6 }} more ingredients</span>
+            {% endif %}
+          </div>
         </div>
-      {% endfor %}
-    </div>
-  {% endif %}
-  {% if instructions.size > 0 %}
-    <div class="hr"></div>
-    <div class="item">
-      <span class="value value--small lg:value--medium">Instructions</span>
-      {% for instruction in instructions %}
-        <div class="meta">
-          <span class="label">{{ forloop.index }}. {{ instruction }}</span>
+      {% endif %}
+      {% if instructions.size > 0 %}
+        <div class="item">
+          <div class="content">
+            <span class="value value--small lg:value--medium">Instructions</span>
+            {% for instruction in instructions limit: 4 %}
+              <span class="label label--small">{{ forloop.index }}. {{ instruction | truncate: 120 }}</span>
+            {% endfor %}
+            {% if instructions.size > 4 %}
+              <span class="label label--small">+ {{ instructions.size | minus: 4 }} more steps</span>
+            {% endif %}
+          </div>
         </div>
-      {% endfor %}
+      {% endif %}
     </div>
   {% endif %}
   <div class="title_bar">

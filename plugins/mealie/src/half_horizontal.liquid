@@ -1,39 +1,35 @@
-<div class="layout layout--row layout--stretch gap">
+<div class="layout layout--col gap--small">
   {% if error %}
-    <div class="columns">
-      <div class="column">
-        <span class="value value--medium">{{ error }}</span>
+    <div class="item">
+      <div class="content">
+        <span class="value value--small">{{ error }}</span>
       </div>
     </div>
   {% else %}
-    <div class="columns">
-      <div class="column">
-        <span class="value value--medium lg:value--large">{{ name }}</span>
-        {% if description %}
-          <div class="meta">
-            <span class="label">{{ description }}</span>
-          </div>
-        {% endif %}
+    <div class="item">
+      <div class="content">
+        <span class="value value--medium">{{ name }}</span>
+        {% if description %}<span class="label label--small">{{ description | truncate: 70 }}</span>{% endif %}
         <div class="meta">
-          {% if prep_time %}<span class="label">Prep {{ prep_time }}</span>{% endif %}
-          {% if cook_time %}<span class="label">Cook {{ cook_time }}</span>{% endif %}
-          {% if total_time %}<span class="label">Total {{ total_time }}</span>{% endif %}
+          {% if total_time %}<span class="label">{{ total_time }}</span>{% endif %}
           {% if servings %}<span class="label">{{ servings }} servings</span>{% endif %}
+          {% if rating %}<span class="label">★ {{ rating }}</span>{% endif %}
         </div>
-        {% if ingredients.size > 0 %}
-          <div class="meta">
-            {% for ingredient in ingredients limit: 4 %}
-              <span class="label">{{ ingredient }}</span>
-            {% endfor %}
-          </div>
-        {% endif %}
-      </div>
-      <div class="column">
-        {% if image %}
-          <img class="image image-cover image-dither rounded" src="{{ image }}" />
-        {% endif %}
       </div>
     </div>
+    {% if ingredients.size > 0 %}
+      <div class="item">
+        <div class="content">
+          <span class="label label--small">Ingredients</span>
+          {% for ingredient in ingredients limit: 3 %}
+            <span class="label">• {{ ingredient }}</span>
+          {% endfor %}
+          {% if ingredients.size > 3 %}
+            <span class="label label--small">+ {{ ingredients.size | minus: 3 }} more</span>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
   {% endif %}
   <div class="title_bar">
     <span class="title">Recipe of the Day</span>

@@ -1,29 +1,40 @@
-<div class="layout layout--col layout--stretch gap">
+<div class="layout layout--col gap--small">
   {% if error %}
     <div class="item">
-      <span class="value value--medium">{{ error }}</span>
+      <div class="content">
+        <span class="value value--small">{{ error }}</span>
+      </div>
     </div>
   {% else %}
-    {% if image %}
+    <div class="grid grid--cols-2">
       <div class="item">
-        <img class="image image-cover image-dither rounded" src="{{ image }}" />
+        <div class="content">
+          <span class="value value--medium">{{ name }}</span>
+          {% if total_time %}<span class="label">{{ total_time }}</span>{% endif %}
+          {% if servings %}<span class="label">{{ servings }} servings</span>{% endif %}
+          {% if prep_time %}<span class="label label--small">Prep {{ prep_time }}</span>{% endif %}
+        </div>
       </div>
-    {% endif %}
-    <div class="item">
-      <span class="value value--medium lg:value--large">{{ name }}</span>
-      <div class="meta">
-        {% if prep_time %}<span class="label">Prep {{ prep_time }}</span>{% endif %}
-        {% if cook_time %}<span class="label">Cook {{ cook_time }}</span>{% endif %}
-        {% if total_time %}<span class="label">Total {{ total_time }}</span>{% endif %}
-        {% if servings %}<span class="label">{{ servings }} servings</span>{% endif %}
+      <div class="item">
+        {% if image %}
+          <img class="image image-cover image-dither rounded" src="{{ image }}" />
+        {% elsif description %}
+          <div class="content">
+            <span class="label label--small">{{ description | truncate: 60 }}</span>
+          </div>
+        {% endif %}
       </div>
     </div>
     {% if ingredients.size > 0 %}
       <div class="item">
-        <div class="meta">
+        <div class="content">
+          <span class="label label--small">Ingredients</span>
           {% for ingredient in ingredients limit: 4 %}
-            <span class="label">{{ ingredient }}</span>
+            <span class="label">• {{ ingredient }}</span>
           {% endfor %}
+          {% if ingredients.size > 4 %}
+            <span class="label label--small">+ {{ ingredients.size | minus: 4 }} more</span>
+          {% endif %}
         </div>
       </div>
     {% endif %}
