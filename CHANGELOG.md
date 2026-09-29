@@ -1,3 +1,10 @@
+## [1.4.7](https://github.com/martynvdijke/trmnl/compare/v1.4.6...v1.4.7) (2026-09-29)
+
+
+### Bug Fixes
+
+* improve Immich stats and Mealie layouts ([c673d66](https://github.com/martynvdijke/trmnl/commit/c673d66bd2ed203579a1f2ab3073f8db0e96210b))
+
 ## [1.4.6](https://github.com/martynvdijke/trmnl/compare/v1.4.5...v1.4.6) (2026-09-13)
 
 
