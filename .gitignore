@@ -34,3 +34,6 @@ openspec/
 
 # TRMNL build artifacts
 plugins/*/_build/
+
+# Zensical build output
+site/
