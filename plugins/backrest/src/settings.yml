@@ -1,5 +1,3 @@
-id: 450314
----
 strategy: polling
 no_screen_padding: 'no'
 dark_mode: 'no'

@@ -12,7 +12,7 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: "4.0.6"
-      - run: gem install trmnl_preview
+      - run: gem install trmnl_preview -v 0.11.0
       - name: Lint TRMNL plugins
         run: |
           for d in plugins/*/; do
@@ -29,7 +29,7 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: "4.0.6"
-      - run: gem install trmnl_preview
+      - run: gem install trmnl_preview -v 0.11.0
       - name: Bootstrap or require TRMNL plugin IDs
         run: |
           created_any=0
