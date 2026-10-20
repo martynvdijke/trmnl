@@ -1,3 +1,10 @@
+## [1.4.11](https://github.com/martynvdijke/trmnl/compare/v1.4.10...v1.4.11) (2026-10-20)
+
+
+### Bug Fixes
+
+* restore plugin ids lost in settings normalization ([924481a](https://github.com/martynvdijke/trmnl/commit/924481a5dd6485881548afbbfcb50edbc3ebc96a))
+
 ## [1.4.10](https://github.com/martynvdijke/trmnl/compare/v1.4.9...v1.4.10) (2026-10-20)
 
 ## [1.4.9](https://github.com/martynvdijke/trmnl/compare/v1.4.8...v1.4.9) (2026-10-20)
