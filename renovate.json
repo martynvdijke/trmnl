@@ -18,15 +18,11 @@
   "ignorePresets": [
     ":ignoreModulesAndTests"
   ],
-  "platform": "github",
   "platformAutomerge": true,
   "prCreation": "immediate",
   "prHourlyLimit": 10,
   "rebaseWhen": "conflicted",
   "configMigration": true,
-  "repositories": [
-    "martynvdijke/trmnl"
-  ],
   "timezone": "Europe/Amsterdam",
   "lockFileMaintenance": {
     "enabled": true
@@ -38,6 +34,7 @@
         "minor",
         "patch",
         "pin",
+        "pinDigest",
         "digest"
       ],
       "matchCurrentVersion": "!/^0/",
@@ -49,5 +46,6 @@
   },
   "gomod": {
     "enabled": true
-  }
+  },
+  "automergeStrategy": "squash"
 }
