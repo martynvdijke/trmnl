@@ -50,7 +50,7 @@ devices:
 - `GET /api/trmnl/photo/{id}` — proxies `{IMMICH_URL}/api/assets/{id}/thumbnail?size=preview`
   with the configured API key, caches for 24h
 
-Configure via env vars: `IMMICH_URL`, `IMMICH_API_KEY`, `PORT` (default `8080`).
+Configure via env vars: `IMMICH_URL`, `IMMICH_API_KEY`, `PORT` (default `8080`), and optional `TRMNL_PROXY_TOKEN`. Without a token the proxy binds to `127.0.0.1`; setting a token enables remote access and requires `Authorization: Bearer <token>` (or `?token=`). `HOST` overrides the bind address.
 
 ```bash
 task setup     # go mod download
