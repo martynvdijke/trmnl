@@ -1,3 +1,5 @@
+## [1.4.14](https://github.com/martynvdijke/trmnl/compare/v1.4.13...v1.4.14) (2026-10-23)
+
 ## [1.4.13](https://github.com/martynvdijke/trmnl/compare/v1.4.12...v1.4.13) (2026-10-22)
 
 ## [1.4.12](https://github.com/martynvdijke/trmnl/compare/v1.4.11...v1.4.12) (2026-10-22)
