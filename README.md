@@ -32,10 +32,10 @@ Custom TRMNL plugins and the Immich photo proxy middleware, consolidated into a 
 | [home-assistant](plugins/home-assistant) | 453726 | Home Assistant entity summary |
 | [paperless-ngx](plugins/paperless-ngx) | 453727 | Paperless inbox and library |
 | [changedetection](plugins/changedetection) | 453725 | Website change monitoring |
-| [vandyke-stats](plugins/vandyke-stats) | — | vanDyke ledger totals and last slip |
-| [vandyke-latest](plugins/vandyke-latest) | — | Newest vanDyke misspellings |
-| [vandyke-photo](plugins/vandyke-photo) | — | Newest vanDyke photo entry |
-| [vandyke-dashboard](plugins/vandyke-dashboard) | — | vanDyke stats, latest slips and photo |
+| [vandyke-stats](plugins/vandyke-stats) | 521911 | vanDyke ledger totals and last slip |
+| [vandyke-latest](plugins/vandyke-latest) | 521909 | Newest vanDyke misspellings |
+| [vandyke-photo](plugins/vandyke-photo) | 521910 | Newest vanDyke photo entry |
+| [vandyke-dashboard](plugins/vandyke-dashboard) | 521908 | vanDyke stats, latest slips and photo |
 
 Each plugin lives in `plugins/<name>/` with its own `.trmnlp.yml` and `src/`
 (`settings.yml`, `transform.py`, and one `.liquid` view per display size).

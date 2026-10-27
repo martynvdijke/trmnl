@@ -8,6 +8,7 @@ serverless_language: python
 polling_url: "{{url}}/api/v1/entries?per_page=3&sort=created_at&order=desc"
 polling_headers: Accept=application/json
 polling_body: ''
+id: 521909
 oauth_enabled: 'false'
 oauth_pkce_enabled: 'no'
 oauth_authorize_url: ''
