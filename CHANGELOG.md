@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/martynvdijke/trmnl/compare/v1.5.0...v1.5.1) (2026-10-27)
+
+
+### Bug Fixes
+
+* pin vanDyke plugin IDs ([db93b23](https://github.com/martynvdijke/trmnl/commit/db93b23bb7def0e3d89f141b1a2716f12bdaf3eb))
+
 # [1.5.0](https://github.com/martynvdijke/trmnl/compare/v1.4.16...v1.5.0) (2026-10-27)
 
 
