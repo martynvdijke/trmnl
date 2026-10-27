@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/martynvdijke/trmnl/compare/v1.4.16...v1.5.0) (2026-10-27)
+
+
+### Features
+
+* add vanDyke TRMNL plugins ([611172b](https://github.com/martynvdijke/trmnl/commit/611172b20d62e5ede1d284e9b1109045bb88f8f7))
+
 ## [1.4.16](https://github.com/martynvdijke/trmnl/compare/v1.4.15...v1.4.16) (2026-10-26)
 
 ## [1.4.15](https://github.com/martynvdijke/trmnl/compare/v1.4.14...v1.4.15) (2026-10-25)
