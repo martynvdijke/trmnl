@@ -49,10 +49,6 @@ PLUGINS=(
   freshrss
   wallabag
   booklore
-  vandyke-stats
-  vandyke-latest
-  vandyke-photo
-  vandyke-dashboard
 )
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
