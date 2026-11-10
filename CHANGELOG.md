@@ -1,3 +1,10 @@
+## [1.5.9](https://github.com/martynvdijke/trmnl/compare/v1.5.8...v1.5.9) (2026-11-10)
+
+
+### Bug Fixes
+
+* **renovate:** disable platform automerge so Renovate merges green PRs itself ([71c5ac0](https://github.com/martynvdijke/trmnl/commit/71c5ac001b5d4fce49ab4b0faf285523447dc901))
+
 ## [1.5.8](https://github.com/martynvdijke/trmnl/compare/v1.5.7...v1.5.8) (2026-11-09)
 
 ## [1.5.7](https://github.com/martynvdijke/trmnl/compare/v1.5.6...v1.5.7) (2026-11-07)
